@@ -1,8 +1,33 @@
 import { Outfit } from "@/domain/entities/Outfit";
 import { Collection } from "@/domain/entities/Collection";
 
+const IMG_MAP: Record<number, string> = {
+  1539533113208: "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=800&q=80",
+  1596755094514: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80",
+  1594938298603: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80",
+  1638247025967: "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?w=800&q=80",
+  1521572163474: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80",
+  1542272604: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=800&q=80",
+  1553062407: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
+  1595777457583: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80",
+  1603487742131: "https://images.unsplash.com/photo-1603487742131-4e4ae0b36f16?w=800&q=80",
+  1590874103328: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&q=80",
+  1564257631407: "https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=800&q=80",
+  1583496661160: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?w=800&q=80",
+  1572635196237: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80",
+  1551028719: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&q=80",
+  1595950653106: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&q=80",
+  1591195853828: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=800&q=80",
+  1514326005837: "https://images.unsplash.com/photo-1514326005837-fb4791d25e03?w=800&q=80",
+  1614252235316: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=800&q=80",
+  1524592094714: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800&q=80",
+  1623609163859: "https://images.unsplash.com/photo-1623609163859-ca93c959b5f8?w=800&q=80",
+  1601925260368: "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=800&q=80",
+  1567016526105: "https://images.unsplash.com/photo-1567016526105-22da7c13161a?w=800&q=80",
+};
+
 const IMG = (id: number) =>
-  `https://images.unsplash.com/photo-${id}?w=600&q=80`;
+  IMG_MAP[id] ?? `https://images.unsplash.com/photo-${id}?w=600&q=80`;
 
 export const seedUsers = [
   {

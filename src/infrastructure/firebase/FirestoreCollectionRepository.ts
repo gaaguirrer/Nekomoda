@@ -35,57 +35,89 @@ function docToCollection(id: string, data: Record<string, unknown>): Collection 
 
 export class FirestoreCollectionRepository implements ICollectionRepository {
   async getAll(): Promise<Collection[]> {
-    const db = getFirestoreDB();
-    const snap = await getDocs(collection(db, COLLECTION_NAME));
-    return snap.docs.map(d => docToCollection(d.id, d.data() as Record<string, unknown>));
+    try {
+      const db = getFirestoreDB();
+      const snap = await getDocs(collection(db, COLLECTION_NAME));
+      return snap.docs.map(d => docToCollection(d.id, d.data() as Record<string, unknown>));
+    } catch (e) {
+      console.error("FirestoreCollectionRepository.getAll failed:", e);
+      return [];
+    }
   }
 
   async getById(id: string): Promise<Collection | null> {
-    const db = getFirestoreDB();
-    const snap = await getDoc(doc(db, COLLECTION_NAME, id));
-    if (!snap.exists()) return null;
-    return docToCollection(snap.id, snap.data() as Record<string, unknown>);
+    try {
+      const db = getFirestoreDB();
+      const snap = await getDoc(doc(db, COLLECTION_NAME, id));
+      if (!snap.exists()) return null;
+      return docToCollection(snap.id, snap.data() as Record<string, unknown>);
+    } catch (e) {
+      console.error(`FirestoreCollectionRepository.getById failed for id ${id}:`, e);
+      return null;
+    }
   }
 
   async getByUserId(userId: string): Promise<Collection[]> {
-    const db = getFirestoreDB();
-    const q = query(collection(db, COLLECTION_NAME), where("userId", "==", userId));
-    const snap = await getDocs(q);
-    return snap.docs.map(d => docToCollection(d.id, d.data() as Record<string, unknown>));
+    try {
+      const db = getFirestoreDB();
+      const q = query(collection(db, COLLECTION_NAME), where("userId", "==", userId));
+      const snap = await getDocs(q);
+      return snap.docs.map(d => docToCollection(d.id, d.data() as Record<string, unknown>));
+    } catch (e) {
+      console.error(`FirestoreCollectionRepository.getByUserId failed for user ${userId}:`, e);
+      return [];
+    }
   }
 
   async getPublic(): Promise<Collection[]> {
-    const db = getFirestoreDB();
-    const q = query(
-      collection(db, COLLECTION_NAME),
-      where("privacy", "==", "public"),
-      orderBy("createdAt", "desc"),
-      limit(50)
-    );
-    const snap = await getDocs(q);
-    return snap.docs.map(d => docToCollection(d.id, d.data() as Record<string, unknown>));
+    try {
+      const db = getFirestoreDB();
+      const q = query(
+        collection(db, COLLECTION_NAME),
+        where("privacy", "==", "public"),
+        orderBy("createdAt", "desc"),
+        limit(50)
+      );
+      const snap = await getDocs(q);
+      return snap.docs.map(d => docToCollection(d.id, d.data() as Record<string, unknown>));
+    } catch (e) {
+      console.error("FirestoreCollectionRepository.getPublic failed:", e);
+      return [];
+    }
   }
 
   async save(collection: Collection): Promise<void> {
-    const db = getFirestoreDB();
-    const { id, ...data } = collection;
-    await setDoc(doc(db, COLLECTION_NAME, id), {
-      ...data,
-      createdAt: data.createdAt ?? new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
+    try {
+      const db = getFirestoreDB();
+      const { id, ...data } = collection;
+      await setDoc(doc(db, COLLECTION_NAME, id), {
+        ...data,
+        createdAt: data.createdAt ?? new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+    } catch (e) {
+      console.error(`FirestoreCollectionRepository.save failed for collection ${collection.id}:`, e);
+    }
   }
 
   async update(id: string, data: Partial<Collection>): Promise<void> {
-    const db = getFirestoreDB();
-    await updateDoc(doc(db, COLLECTION_NAME, id), {
-      ...data,
-      updatedAt: new Date().toISOString(),
-    });
+    try {
+      const db = getFirestoreDB();
+      await updateDoc(doc(db, COLLECTION_NAME, id), {
+        ...data,
+        updatedAt: new Date().toISOString(),
+      });
+    } catch (e) {
+      console.error(`FirestoreCollectionRepository.update failed for collection ${id}:`, e);
+    }
   }
 
   async delete(id: string): Promise<void> {
-    const db = getFirestoreDB();
-    await deleteDoc(doc(db, COLLECTION_NAME, id));
+    try {
+      const db = getFirestoreDB();
+      await deleteDoc(doc(db, COLLECTION_NAME, id));
+    } catch (e) {
+      console.error(`FirestoreCollectionRepository.delete failed for collection ${id}:`, e);
+    }
   }
 }

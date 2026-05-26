@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import CatLogo from "@/components/CatLogo";
 
 interface NavbarProps {
   activeTab?: "ropa" | "eventos" | "promociones";
@@ -19,8 +20,10 @@ export default function Navbar({ activeTab, onTabChange, showTabs }: NavbarProps
     <>
       <header className="fixed top-0 w-full z-50 bg-sand-bg dark:bg-ink-black h-20 transition-all duration-300">
         <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
-          <Link href="/" className="text-[36px] md:text-[48px] font-semibold leading-none tracking-tight text-ink-black dark:text-surface-bright">
-            MODA
+          <Link href="/" className="flex items-center gap-2">
+            <CatLogo size={32} className="md:hidden" />
+            <CatLogo size={40} className="hidden md:block" />
+            <span className="text-[36px] md:text-[48px] font-semibold leading-none tracking-tight text-ink-black dark:text-surface-bright">NEKOMODA</span>
           </Link>
           <nav className="hidden md:flex gap-8 items-center h-full">
             {tabs.map(tab => (

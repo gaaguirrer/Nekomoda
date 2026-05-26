@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ItemCard from "@/components/ItemCard";
+import CatLogo from "@/components/CatLogo";
 import { seedItems, categoryLabels } from "@/infrastructure/firebase/seedData";
 import { seedCollections } from "@/infrastructure/firebase/seedSocialData";
 
@@ -37,7 +38,11 @@ export default function LandingPage() {
     <div className="min-h-screen bg-sand-bg">
       <header className="fixed top-0 w-full z-50 bg-sand-bg/95 backdrop-blur-sm h-20 border-b border-outline-variant/50">
         <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
-          <span className="text-[36px] md:text-[48px] font-semibold tracking-tight text-ink-black">MODA</span>
+          <Link href="/" className="flex items-center gap-2">
+            <CatLogo size={36} className="md:hidden" />
+            <CatLogo size={44} className="hidden md:block" />
+            <span className="text-[36px] md:text-[48px] font-semibold tracking-tight text-ink-black">NEKOMODA</span>
+          </Link>
           <nav className="hidden md:flex items-center gap-8">
             <Link href="/#productos" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Productos</Link>
             <Link href="/#colecciones" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Colecciones</Link>
@@ -72,7 +77,7 @@ export default function LandingPage() {
         <section className="pt-32 pb-20 md:pb-32 px-5 md:px-6 max-w-[1280px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="text-label-caps uppercase tracking-widest text-coral-vibrant mb-4 block">MODA — Personal Shopping IA</span>
+              <span className="text-label-caps uppercase tracking-widest text-coral-vibrant mb-4 block">NEKOMODA — Personal Shopping IA</span>
               <h1 className="text-display-lg-mobile md:text-display-lg leading-tight mb-6 text-ink-black">
                 Descubre tu estilo con inteligencia artificial
               </h1>
@@ -183,8 +188,11 @@ export default function LandingPage() {
 
       <footer className="border-t border-outline-variant py-8 px-5 md:px-6">
         <div className="max-w-[1280px] mx-auto flex justify-between items-center">
-          <span className="text-lg font-semibold tracking-tight">MODA</span>
-          <p className="text-label-caps text-on-surface-variant">© 2026 MODA — Personal Shopping con IA</p>
+          <div className="flex items-center gap-2">
+            <CatLogo size={20} />
+            <span className="text-lg font-semibold tracking-tight">NEKOMODA</span>
+          </div>
+          <p className="text-label-caps text-on-surface-variant">© 2026 NEKOMODA — Personal Shopping con IA</p>
         </div>
       </footer>
     </div>

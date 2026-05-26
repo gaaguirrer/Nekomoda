@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import CatLogo from "@/components/CatLogo";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -43,7 +44,10 @@ function ProfileContent({ user }: { user: { uid: string; email?: string; display
     <div className="min-h-screen bg-sand-bg">
       <header className="fixed top-0 w-full z-50 bg-sand-bg h-20">
         <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
-          <button onClick={() => router.push("/dashboard")} className="text-[36px] font-semibold tracking-tight text-ink-black">MODA</button>
+          <button onClick={() => router.push("/dashboard")} className="flex items-center gap-2">
+            <CatLogo size={28} />
+            <span className="text-[36px] font-semibold tracking-tight text-ink-black">NEKOMODA</span>
+          </button>
           <button onClick={handleLogout} className="text-label-caps text-on-surface-variant uppercase tracking-widest hover:text-ink-black">Salir</button>
         </div>
       </header>

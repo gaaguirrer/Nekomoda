@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import ItemCard from "@/components/ItemCard";
 import CatLogo from "@/components/CatLogo";
+import Navbar from "@/components/Navbar";
 import { seedItems, categoryLabels } from "@/infrastructure/firebase/seedData";
 import { seedCollections } from "@/infrastructure/firebase/seedSocialData";
 import { enterDemoMode } from "@/infrastructure/demo/demoMode";
@@ -12,8 +12,6 @@ interface Product {
 }
 
 export default function LandingPage() {
-  const router = useRouter();
-
   useEffect(() => {
     enterDemoMode();
   }, []);
@@ -33,29 +31,14 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <header className="fixed top-0 w-full z-50 bg-sand-bg/95 backdrop-blur-sm h-20 border-b border-outline-variant/50">
-        <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
-          <Link href="/" className="flex items-center gap-2">
-            <CatLogo size={36} className="md:hidden" />
-            <CatLogo size={44} className="hidden md:block" />
-            <span className="text-[36px] md:text-[48px] font-semibold tracking-tight text-ink-black">NEKOMODA</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="/#productos" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Productos</Link>
-            <Link href="/#colecciones" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Colecciones</Link>
-            <Link href="/dashboard" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Dashboard</Link>
-            <Link href="/settings" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Ajustes</Link>
-            <button onClick={() => router.push("/profile")} className="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
-              <span className="material-symbols-outlined text-ink-black text-2xl">person</span>
-            </button>
-          </nav>
-          <div className="md:hidden flex items-center gap-3">
-            <button onClick={() => router.push("/dashboard")} className="w-8 h-8 rounded-full bg-surface-container overflow-hidden flex items-center justify-center">
-              <span className="material-symbols-outlined text-ink-black">person</span>
-            </button>
-          </div>
-        </div>
-      </header>
+      <Navbar
+        navLinks={[
+          { href: "/#productos", label: "Productos" },
+          { href: "/#colecciones", label: "Colecciones" },
+          { href: "/dashboard", label: "Dashboard" },
+          { href: "/settings", label: "Ajustes" },
+        ]}
+      />
 
       <main>
         <section className="pt-32 pb-20 md:pb-32 px-5 md:px-6 max-w-[1280px] mx-auto">

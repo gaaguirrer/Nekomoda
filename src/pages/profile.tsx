@@ -1,11 +1,10 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import CatLogo from "@/components/CatLogo";
+import Navbar from "@/components/Navbar";
 import { DEMO_USER } from "@/infrastructure/demo/demoMode";
 
 export default function ProfilePage() {
   const router = useRouter();
-
   return <ProfileContent user={DEMO_USER} />;
 }
 
@@ -21,17 +20,18 @@ function ProfileContent({ user }: { user: { uid: string; email?: string; display
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <header className="fixed top-0 w-full z-50 bg-sand-bg h-20">
-        <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
-          <button onClick={() => router.push("/dashboard")} className="flex items-center gap-2">
-            <CatLogo size={28} />
-            <span className="text-[36px] font-semibold tracking-tight text-ink-black">NEKOMODA</span>
+      <Navbar
+        rightSlot={
+          <button
+            onClick={handleLogout}
+            className="text-label-caps text-on-surface-variant uppercase tracking-widest hover:text-ink-black transition-colors"
+          >
+            Salir
           </button>
-          <button onClick={handleLogout} className="text-label-caps text-on-surface-variant uppercase tracking-widest hover:text-ink-black">Salir</button>
-        </div>
-      </header>
+        }
+      />
 
-      <main className="pt-24 pb-12 max-w-[680px] mx-auto px-5">
+      <main className="pt-24 pb-24 max-w-[680px] mx-auto px-5">
         <div className="flex items-center gap-6 mb-10">
           <div className="w-20 h-20 rounded-full bg-surface-container overflow-hidden">
             {user.photoURL ? (

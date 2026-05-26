@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import CatLogo from "@/components/CatLogo";
+import Navbar from "@/components/Navbar";
 import ItemCard from "@/components/ItemCard";
 import { apiGet, apiPost } from "@/infrastructure/web/lib/apiClient";
-import { getUserId, DEMO_USER } from "@/infrastructure/demo/demoMode";
+import { getUserId } from "@/infrastructure/demo/demoMode";
 import { categoryLabels } from "@/infrastructure/firebase/seedData";
 
 interface FavItem {
@@ -47,21 +47,9 @@ export default function FavoritesPage() {
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <header className="fixed top-0 w-full z-50 bg-sand-bg h-20 border-b border-outline-variant">
-        <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
-          <button onClick={() => router.back()} className="flex items-center gap-2 text-on-surface-variant hover:text-ink-black">
-            <span className="material-symbols-outlined">arrow_back</span>
-            <span className="text-label-caps uppercase tracking-widest">Volver</span>
-          </button>
-          <Link href="/" className="flex items-center gap-2">
-            <CatLogo size={28} />
-            <span className="text-2xl font-semibold tracking-tight text-ink-black">NEKOMODA</span>
-          </Link>
-          <div className="w-20" />
-        </div>
-      </header>
+      <Navbar showBack />
 
-      <main className="pt-24 pb-12 max-w-[1280px] mx-auto px-5">
+      <main className="pt-24 pb-24 max-w-[1280px] mx-auto px-5">
         <h1 className="text-display-lg-mobile md:text-display-lg mb-2">Mis Favoritos</h1>
         <p className="text-body-lg text-on-surface-variant mb-10">
           {loading ? "" : `${items.length} producto${items.length !== 1 ? "s" : ""} guardado${items.length !== 1 ? "s" : ""}`}

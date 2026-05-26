@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Navbar from "@/components/Navbar";
 import { apiGet, apiPost } from "@/infrastructure/web/lib/apiClient";
 import { getUserId } from "@/infrastructure/demo/demoMode";
 
@@ -75,24 +76,21 @@ export default function NewOutfitPage() {
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <header className="fixed top-0 w-full z-50 bg-sand-bg h-20 border-b border-outline-variant">
-        <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
-          <button onClick={() => router.back()} className="flex items-center gap-2 text-on-surface-variant hover:text-ink-black">
-            <span className="material-symbols-outlined">arrow_back</span>
-            <span className="text-label-caps uppercase tracking-widest">Volver</span>
-          </button>
-          <span className="text-lg font-semibold">Nuevo Outfit</span>
+      <Navbar
+        showBack
+        title="Nuevo Outfit"
+        rightSlot={
           <button
             onClick={handleSave}
             disabled={!name || selected.length === 0 || saving}
-            className="px-6 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest disabled:opacity-30"
+            className="px-4 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest text-sm disabled:opacity-30 hover:bg-on-primary-fixed-variant transition-colors"
           >
             {saving ? "Guardando..." : "Publicar"}
           </button>
-        </div>
-      </header>
+        }
+      />
 
-      <main className="pt-20 pb-12 max-w-[800px] mx-auto px-5">
+      <main className="pt-24 pb-24 max-w-[800px] mx-auto px-5">
         <div className="space-y-6 mb-8">
           <input
             type="text"

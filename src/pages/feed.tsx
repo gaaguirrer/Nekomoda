@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import CatLogo from "@/components/CatLogo";
+import Navbar from "@/components/Navbar";
 import { getUserId } from "@/infrastructure/demo/demoMode";
 import { apiGet } from "@/infrastructure/web/lib/apiClient";
 
@@ -47,23 +47,19 @@ export default function FeedPage() {
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <div className="fixed top-0 w-full z-50 bg-sand-bg h-20">
-        <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
-          <button onClick={() => router.push("/dashboard")} className="flex items-center gap-2">
-            <CatLogo size={32} className="md:hidden" />
-            <CatLogo size={40} className="hidden md:block" />
-            <span className="text-[36px] md:text-[48px] font-semibold tracking-tight text-ink-black">NEKOMODA</span>
+      <Navbar
+        rightSlot={
+          <button
+            onClick={() => router.push("/outfit/new")}
+            className="px-4 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest text-sm hover:bg-on-primary-fixed-variant transition-colors"
+          >
+            + Outfit
           </button>
-          <div className="flex items-center gap-4">
-            <button onClick={() => router.push("/outfit/new")} className="px-4 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-colors">
-              + Outfit
-            </button>
-          </div>
-        </div>
-      </div>
+        }
+      />
 
-      <main className="pt-20 pb-12 max-w-[680px] mx-auto px-5">
-        <div className="flex gap-6 border-b border-outline-variant mb-8">
+      <main className="pt-24 pb-24 max-w-[680px] mx-auto px-5">
+        <div className="flex gap-6 border-b border-outline-variant mb-8 mt-4">
           <button
             onClick={() => setTab("discover")}
             className={`pb-4 text-label-caps uppercase tracking-widest ${

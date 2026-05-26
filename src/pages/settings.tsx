@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 import { apiGet, apiPost } from "@/infrastructure/web/lib/apiClient";
 import { getUserId } from "@/infrastructure/demo/demoMode";
 
@@ -132,26 +133,24 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <header className="fixed top-0 w-full z-50 bg-sand-bg h-20 border-b border-outline-variant">
-        <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
-          <div className="flex items-center gap-4">
-            <button onClick={() => router.back()} className="material-symbols-outlined text-ink-black">arrow_back</button>
-            <span className="text-lg font-semibold">Ajustes de Estilo</span>
-          </div>
+      <Navbar
+        showBack
+        title="Ajustes de Estilo"
+        rightSlot={
           <div className="flex items-center gap-3">
             {saved && <span className="text-label-caps text-green-600">✓ Guardado</span>}
             <button
               onClick={handleSave}
               disabled={saving || loadingProfile}
-              className="px-6 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest disabled:opacity-30 hover:bg-on-primary-fixed-variant transition-colors"
+              className="px-4 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest text-sm disabled:opacity-30 hover:bg-on-primary-fixed-variant transition-colors"
             >
               {saving ? "Guardando..." : "Guardar"}
             </button>
           </div>
-        </div>
-      </header>
+        }
+      />
 
-      <main className="pt-24 pb-12 max-w-[680px] mx-auto px-5">
+      <main className="pt-24 pb-24 max-w-[680px] mx-auto px-5">
         <div className="mb-8">
           <h1 className="text-headline-md mb-2">Personaliza tu Perfil de Estilo</h1>
           <p className="text-body-md text-on-surface-variant">

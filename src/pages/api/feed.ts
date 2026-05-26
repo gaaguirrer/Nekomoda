@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (isDemoRequest(req)) {
-      ensureDemoUser(req);
+      await ensureDemoUser(req);
       const { outfitRepo, followRepo } = getDemoRepos(req);
       const useCase = new GetFeed(outfitRepo, followRepo);
       const feed = await useCase.execute(userId, (type as "following" | "discover") ?? "discover");

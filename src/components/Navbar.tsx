@@ -1,17 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import CatLogo from "@/components/CatLogo";
-import type { ReactNode } from "react";
 
 interface NavbarProps {
   activeTab?: "ropa" | "eventos" | "promociones";
   onTabChange?: (tab: "ropa" | "eventos" | "promociones") => void;
   showTabs?: boolean;
-  rightSlot?: ReactNode;
-  title?: string;
-  showBack?: boolean;
   hideBottomNav?: boolean;
-  navLinks?: Array<{ href: string; label: string }>;
 }
 
 const NAV_LINKS = [
@@ -38,11 +33,7 @@ export default function Navbar({
   activeTab,
   onTabChange,
   showTabs,
-  rightSlot,
-  title,
-  showBack,
   hideBottomNav,
-  navLinks,
 }: NavbarProps) {
   const router = useRouter();
   const isActive = (href: string) => router.pathname === href;
@@ -51,22 +42,15 @@ export default function Navbar({
     <>
       <header className="fixed top-0 w-full z-50 bg-sand-bg h-20 border-b border-outline-variant">
         <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
-          <div className="flex items-center gap-2 md:gap-4">
-            {showBack && (
-              <button onClick={() => router.back()} className="material-symbols-outlined text-ink-black text-2xl md:text-3xl">
-                arrow_back
-              </button>
-            )}
-            <Link href="/" className="flex items-center gap-1.5 md:gap-2">
-              <CatLogo size={28} className="md:hidden" />
-              <CatLogo size={32} className="hidden md:block" />
-              <span className="text-[28px] md:text-[32px] font-semibold leading-none tracking-tight text-ink-black">NEKOMODA</span>
-            </Link>
-          </div>
+          <Link href="/" className="flex items-center gap-1.5 md:gap-2">
+            <CatLogo size={28} className="md:hidden" />
+            <CatLogo size={32} className="hidden md:block" />
+            <span className="text-[28px] md:text-[32px] font-semibold leading-none tracking-tight text-ink-black">NEKOMODA</span>
+          </Link>
 
-          {!title && (
-            <nav className="hidden md:flex gap-6 lg:gap-8 items-center">
-              {(navLinks ?? (showTabs ? [] : NAV_LINKS)).map(link => (
+          <div className="flex items-center gap-4 lg:gap-6">
+            <nav className="hidden md:flex items-center gap-4 lg:gap-6">
+              {NAV_LINKS.map(link => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -79,28 +63,7 @@ export default function Navbar({
                   {link.label}
                 </Link>
               ))}
-              {showTabs && TABS.map(tab => (
-                <button
-                  key={tab.key}
-                  onClick={() => onTabChange?.(tab.key)}
-                  className={`text-label-caps uppercase tracking-[0.1em] pb-1 transition-all duration-300 ${
-                    activeTab === tab.key
-                      ? "text-ink-black border-b-2 border-ink-black"
-                      : "text-on-surface-variant hover:text-ink-black"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
             </nav>
-          )}
-
-          {title && (
-            <span className="text-body-lg font-semibold text-ink-black hidden md:block">{title}</span>
-          )}
-
-          <div className="flex items-center gap-3 md:gap-4">
-            {rightSlot}
             <button
               onClick={() => router.push("/profile")}
               className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-surface-container overflow-hidden flex items-center justify-center"
@@ -112,23 +75,23 @@ export default function Navbar({
       </header>
 
       {showTabs && (
-        <section className="md:hidden px-5 overflow-x-auto no-scrollbar mt-20">
-          <div className="flex gap-6 whitespace-nowrap border-b border-outline-variant">
+        <div className="fixed top-20 left-0 w-full z-40 bg-sand-bg border-b border-outline-variant">
+          <div className="max-w-[1280px] mx-auto px-5 md:px-6 flex gap-6 overflow-x-auto no-scrollbar">
             {TABS.map(tab => (
               <button
                 key={tab.key}
                 onClick={() => onTabChange?.(tab.key)}
-                className={`pb-4 pt-4 text-label-caps ${
+                className={`py-4 text-label-caps uppercase tracking-[0.1em] whitespace-nowrap transition-all duration-300 ${
                   activeTab === tab.key
-                    ? "border-b-2 border-ink-black text-ink-black"
-                    : "text-on-surface-variant"
+                    ? "text-ink-black border-b-2 border-ink-black"
+                    : "text-on-surface-variant hover:text-ink-black"
                 }`}
               >
                 {tab.label}
               </button>
             ))}
           </div>
-        </section>
+        </div>
       )}
 
       {!hideBottomNav && (

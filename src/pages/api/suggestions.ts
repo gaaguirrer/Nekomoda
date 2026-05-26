@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!userId || typeof userId !== "string") return res.status(400).json({ error: "userId is required" });
 
     if (isDemoRequest(req)) {
-      ensureDemoUser(req);
+      await ensureDemoUser(req);
       const { userRepo, followRepo } = getDemoRepos(req);
       const useCase = new SuggestUsers(userRepo, followRepo);
       const suggestions = await useCase.execute(userId);

@@ -5,7 +5,7 @@ import { CreateCollection } from "@/application/use-cases/CreateCollection";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (isDemoRequest(req)) {
-      ensureDemoUser(req);
+      await ensureDemoUser(req);
       const { collectionRepo, outfitRepo } = getDemoRepos(req);
       switch (req.method) {
         case "GET": {

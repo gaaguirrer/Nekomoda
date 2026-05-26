@@ -47,7 +47,7 @@ export default function FavoritesPage() {
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <Navbar showBack />
+      <Navbar />
 
       <main className="pt-24 pb-24 max-w-[1280px] mx-auto px-5">
         <h1 className="text-display-lg-mobile md:text-display-lg mb-2">Mis Favoritos</h1>

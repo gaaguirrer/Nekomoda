@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (isDemoRequest(req)) {
-      ensureDemoUser(req);
+      await ensureDemoUser(req);
       const { userRepo, outfitRepo } = getDemoRepos(req);
       const user = await userRepo.getById(userId);
       if (!user?.tasteProfile?.vector) {

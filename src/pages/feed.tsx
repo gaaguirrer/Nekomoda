@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { getUserId } from "@/infrastructure/demo/demoMode";
 import { apiGet } from "@/infrastructure/web/lib/apiClient";
@@ -47,37 +48,35 @@ export default function FeedPage() {
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <Navbar
-        rightSlot={
-          <button
-            onClick={() => router.push("/outfit/new")}
+      <Navbar />
+
+      <main className="pt-24 pb-24 max-w-[680px] mx-auto px-5">
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex gap-6 border-b border-outline-variant">
+            <button
+              onClick={() => setTab("discover")}
+              className={`pb-4 text-label-caps uppercase tracking-widest ${
+                tab === "discover" ? "border-b-2 border-ink-black text-ink-black" : "text-on-surface-variant"
+              }`}
+            >
+              Descubrir
+            </button>
+            <button
+              onClick={() => setTab("following")}
+              className={`pb-4 text-label-caps uppercase tracking-widest ${
+                tab === "following" ? "border-b-2 border-ink-black text-ink-black" : "text-on-surface-variant"
+              }`}
+            >
+              Siguiendo
+            </button>
+          </div>
+          <Link
+            href="/outfit/new"
             className="px-4 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest text-sm hover:bg-on-primary-fixed-variant transition-colors"
           >
             + Outfit
-          </button>
-        }
-      />
-
-      <main className="pt-24 pb-24 max-w-[680px] mx-auto px-5">
-        <div className="flex gap-6 border-b border-outline-variant mb-8 mt-4">
-          <button
-            onClick={() => setTab("discover")}
-            className={`pb-4 text-label-caps uppercase tracking-widest ${
-              tab === "discover" ? "border-b-2 border-ink-black text-ink-black" : "text-on-surface-variant"
-            }`}
-          >
-            Descubrir
-          </button>
-          <button
-            onClick={() => setTab("following")}
-            className={`pb-4 text-label-caps uppercase tracking-widest ${
-              tab === "following" ? "border-b-2 border-ink-black text-ink-black" : "text-on-surface-variant"
-            }`}
-          >
-            Siguiendo
-          </button>
+          </Link>
         </div>
-
         {loading ? (
           <div className="space-y-8">
             {Array.from({ length: 3 }).map((_, i) => (

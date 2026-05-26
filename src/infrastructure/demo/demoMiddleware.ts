@@ -29,9 +29,9 @@ export function getDemoRepos(req: NextApiRequest) {
   return { userRepo, itemRepo, eventRepo, promoRepo, outfitRepo, collectionRepo, followRepo };
 }
 
-export function ensureDemoUser(req: NextApiRequest): void {
+export async function ensureDemoUser(req: NextApiRequest): Promise<void> {
   const { userRepo } = getDemoRepos(req);
-  const existing = userRepo.getById(DEMO_USER_ID);
+  const existing = await userRepo.getById(DEMO_USER_ID);
   if (!existing) {
     const demoUser = {
       id: DEMO_USER_ID,
@@ -42,6 +42,6 @@ export function ensureDemoUser(req: NextApiRequest): void {
       tasteProfile: { vector: [0.5, 0.5, 0.5, 0.5, 0.5], answers: { q1: "c", q2: "c", q3: "c", q4: "c", q5: "c" } },
       followerCount: 0, followingCount: 0, outfitCount: 0,
     };
-    userRepo.save(demoUser as any);
+    await userRepo.save(demoUser as any);
   }
 }

@@ -31,14 +31,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <Navbar
-        navLinks={[
-          { href: "/#productos", label: "Productos" },
-          { href: "/#colecciones", label: "Colecciones" },
-          { href: "/dashboard", label: "Dashboard" },
-          { href: "/settings", label: "Ajustes" },
-        ]}
-      />
+      <Navbar />
 
       <main>
         <section className="pt-32 pb-20 md:pb-32 px-5 md:px-6 max-w-[1280px] mx-auto">

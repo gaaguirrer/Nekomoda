@@ -133,10 +133,16 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <Navbar
-        showBack
-        title="Ajustes de Estilo"
-        rightSlot={
+      <Navbar />
+
+      <main className="pt-24 pb-24 max-w-[680px] mx-auto px-5">
+        <div className="flex items-center justify-between mb-8 border-b border-outline-variant pb-4">
+          <div>
+            <h1 className="text-headline-md">Ajustes de Estilo</h1>
+            <p className="text-body-md text-on-surface-variant mt-1">
+              Tus respuestas ayudan al algoritmo a encontrar las mejores recomendaciones para ti.
+            </p>
+          </div>
           <div className="flex items-center gap-3">
             {saved && <span className="text-label-caps text-green-600">✓ Guardado</span>}
             <button
@@ -147,15 +153,6 @@ export default function SettingsPage() {
               {saving ? "Guardando..." : "Guardar"}
             </button>
           </div>
-        }
-      />
-
-      <main className="pt-24 pb-24 max-w-[680px] mx-auto px-5">
-        <div className="mb-8">
-          <h1 className="text-headline-md mb-2">Personaliza tu Perfil de Estilo</h1>
-          <p className="text-body-md text-on-surface-variant">
-            Tus respuestas ayudan al algoritmo a encontrar las mejores recomendaciones para ti. Puedes modificarlas cuando quieras.
-          </p>
         </div>
 
         <div className="border-t border-outline-variant pt-2" />

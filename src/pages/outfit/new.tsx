@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Navbar from "@/components/Navbar";
 import { apiGet, apiPost } from "@/infrastructure/web/lib/apiClient";
 import { getUserId } from "@/infrastructure/demo/demoMode";
+import Link from "next/link";
 
 interface AvailableItem {
   id: string;
@@ -20,6 +21,7 @@ export default function NewOutfitPage() {
   const [available, setAvailable] = useState<AvailableItem[]>([]);
   const [selected, setSelected] = useState<AvailableItem[]>([]);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   useEffect(() => {
     apiGet("/api/products")
@@ -49,6 +51,7 @@ export default function NewOutfitPage() {
   const handleSave = async () => {
     if (!name || selected.length === 0) return;
     setSaving(true);
+    setSaveError("");
 
     const userId = getUserId();
 
@@ -67,8 +70,12 @@ export default function NewOutfitPage() {
       });
       if (res.ok) {
         router.push("/profile");
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setSaveError(data.error ?? "Error al publicar el outfit");
       }
-    } catch {
+    } catch (e) {
+      setSaveError(e instanceof Error ? e.message : "Error de conexión");
     } finally {
       setSaving(false);
     }
@@ -76,10 +83,15 @@ export default function NewOutfitPage() {
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <Navbar
-        showBack
-        title="Nuevo Outfit"
-        rightSlot={
+      <Navbar />
+
+      <main className="pt-24 pb-24 max-w-[800px] mx-auto px-5">
+        <div className="flex items-center justify-between mb-8 border-b border-outline-variant pb-4">
+          <button onClick={() => router.back()} className="flex items-center gap-2 text-on-surface-variant hover:text-ink-black transition-colors">
+            <span className="material-symbols-outlined">arrow_back</span>
+            <span className="text-label-caps uppercase tracking-widest">Volver</span>
+          </button>
+          <h1 className="text-headline-md">Nuevo Outfit</h1>
           <button
             onClick={handleSave}
             disabled={!name || selected.length === 0 || saving}
@@ -87,10 +99,8 @@ export default function NewOutfitPage() {
           >
             {saving ? "Guardando..." : "Publicar"}
           </button>
-        }
-      />
+        </div>
 
-      <main className="pt-24 pb-24 max-w-[800px] mx-auto px-5">
         <div className="space-y-6 mb-8">
           <input
             type="text"
@@ -122,6 +132,10 @@ export default function NewOutfitPage() {
             ))}
           </div>
         </div>
+
+        {saveError && (
+          <div className="mb-6 p-4 bg-error-container border border-error text-error text-body-md">{saveError}</div>
+        )}
 
         <div className="border-t border-outline-variant pt-6">
           <h3 className="text-label-caps uppercase tracking-widest text-on-surface-variant mb-4">

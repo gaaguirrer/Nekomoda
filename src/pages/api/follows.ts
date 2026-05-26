@@ -5,7 +5,7 @@ import { FollowUser, UnfollowUser } from "@/application/use-cases/FollowUser";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (isDemoRequest(req)) {
-      ensureDemoUser(req);
+      await ensureDemoUser(req);
       const { followRepo, userRepo } = getDemoRepos(req);
       switch (req.method) {
         case "GET": {

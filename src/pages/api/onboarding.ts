@@ -18,7 +18,7 @@ export default async function handler(
 
       let repo = userRepo;
       if (isDemoRequest(req)) {
-        ensureDemoUser(req);
+        await ensureDemoUser(req);
         const repos = getDemoRepos(req);
         repo = repos.userRepo;
       }

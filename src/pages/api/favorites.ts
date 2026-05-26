@@ -5,7 +5,7 @@ import { ToggleFavoriteItem, GetUserFavorites } from "@/application/use-cases/Ma
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (isDemoRequest(req)) {
-      ensureDemoUser(req);
+      await ensureDemoUser(req);
       const { userRepo, itemRepo } = getDemoRepos(req);
 
       const { InMemoryUserListRepository } = await import("@/infrastructure/firebase/InMemoryUserListRepository");

@@ -20,16 +20,7 @@ function ProfileContent({ user }: { user: { uid: string; email?: string; display
 
   return (
     <div className="min-h-screen bg-sand-bg">
-      <Navbar
-        rightSlot={
-          <button
-            onClick={handleLogout}
-            className="text-label-caps text-on-surface-variant uppercase tracking-widest hover:text-ink-black transition-colors"
-          >
-            Salir
-          </button>
-        }
-      />
+      <Navbar />
 
       <main className="pt-24 pb-24 max-w-[680px] mx-auto px-5">
         <div className="flex items-center gap-6 mb-10">
@@ -50,6 +41,9 @@ function ProfileContent({ user }: { user: { uid: string; email?: string; display
             </button>
             <button onClick={() => router.push("/outfit/new")} className="px-4 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest">
               + Outfit
+            </button>
+            <button onClick={handleLogout} className="px-4 py-2 border border-outline-variant text-label-caps uppercase tracking-widest text-on-surface-variant hover:text-ink-black hover:border-ink-black transition-colors">
+              Salir
             </button>
           </div>
         </div>

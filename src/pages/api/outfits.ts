@@ -5,7 +5,7 @@ import { CreateOutfit } from "@/application/use-cases/CreateOutfit";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (isDemoRequest(req)) {
-      ensureDemoUser(req);
+      await ensureDemoUser(req);
       const { outfitRepo, userRepo } = getDemoRepos(req);
       switch (req.method) {
         case "GET": {

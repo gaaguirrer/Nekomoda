@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MODA - Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .progress-glow {
+            box-shadow: 0 0 15px rgba(255, 127, 80, 0.4);
+        }
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fade-in-up 0.6s ease-out forwards;
+        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        
+        .option-card:hover {
+            border-color: #121212;
+            background-color: #FFFFFF;
+        }
+        .option-card.active {
+            border-width: 2px;
+            border-color: #121212;
+            background-color: #FFFFFF;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "sand-bg": "#F9F9F7",
+                    "surface-bright": "#fbf9f9",
+                    "ink-black": "#121212",
+                    "on-primary-fixed-variant": "#474746",
+                    "secondary": "#a43c12",
+                    "background": "#fbf9f9",
+                    "on-secondary-container": "#6b1f00",
+                    "secondary-fixed-dim": "#ffb59c",
+                    "inverse-surface": "#303031",
+                    "surface-dim": "#dbdad9",
+                    "surface-container-high": "#e9e8e7",
+                    "on-secondary-fixed": "#380c00",
+                    "surface-container": "#efeded",
+                    "coral-muted": "#E9967A",
+                    "on-surface-variant": "#444748",
+                    "outline-variant": "#c4c7c7",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#858383",
+                    "surface-variant": "#e4e2e2",
+                    "surface-tint": "#5f5e5e",
+                    "coral-vibrant": "#FF7F50",
+                    "on-error-container": "#93000a",
+                    "surface": "#fbf9f9",
+                    "surface-container-low": "#f5f3f3",
+                    "on-tertiary-fixed-variant": "#454744",
+                    "on-tertiary-container": "#838480",
+                    "error": "#ba1a1a",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1b1c1c",
+                    "primary-fixed-dim": "#c8c6c5",
+                    "secondary-container": "#fe7e4f",
+                    "on-primary-fixed": "#1c1b1b",
+                    "on-tertiary-fixed": "#1a1c19",
+                    "tertiary-container": "#1a1c19",
+                    "inverse-on-surface": "#f2f0f0",
+                    "on-surface": "#1b1c1c",
+                    "outline": "#747878",
+                    "tertiary-fixed-dim": "#c6c7c2",
+                    "primary": "#000000",
+                    "tertiary-fixed": "#e3e3de",
+                    "secondary-fixed": "#ffdbcf",
+                    "on-secondary-fixed-variant": "#822800",
+                    "error-container": "#ffdad6",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#e5e2e1",
+                    "surface-container-highest": "#e4e2e2",
+                    "primary-container": "#1c1b1b",
+                    "tertiary": "#000000",
+                    "on-primary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "inverse-primary": "#c8c6c5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "stack-sm": "8px",
+                    "stack-lg": "32px",
+                    "gutter": "24px",
+                    "section-gap": "80px",
+                    "stack-md": "16px",
+                    "margin-mobile": "20px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "price-tag": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "price-tag": ["20px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-sand-bg text-ink-black font-body-md selection:bg-coral-vibrant selection:text-white overflow-x-hidden">
+<!-- Progress Indicator -->
+<div class="fixed top-0 left-0 w-full h-1 bg-surface-container z-[60]">
+<div class="h-full bg-coral-vibrant transition-all duration-1000 ease-in-out progress-glow" id="progress-bar" style="width: 80%;"></div>
+</div>
+<!-- Main Content Container -->
+<main class="min-h-screen flex flex-col items-center justify-center px-margin-mobile md:px-gutter max-w-[600px] mx-auto py-section-gap" id="main-canvas">
+<!-- Step Indicator -->
+<div class="mb-stack-lg animate-fade-in-up">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Paso 5 de 5</span>
+</div>
+<!-- Question Header -->
+<div class="text-center mb-section-gap animate-fade-in-up delay-1">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg mb-stack-md leading-tight">¿Cuánto inviertes normalmente en una prenda?</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[400px] mx-auto">Selecciona el rango que mejor represente tu filosofía de compra actual.</p>
+</div>
+<!-- Options Container -->
+<div class="w-full space-y-stack-md mb-section-gap animate-fade-in-up delay-2">
+<!-- Option 1 -->
+<button class="option-card w-full p-stack-lg border border-outline-variant rounded-lg text-left transition-all duration-300 flex items-center justify-between group" onclick="selectOption(this)">
+<div>
+<h3 class="font-headline-md text-headline-md mb-1">Mínimo indispensable</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Priorizo la funcionalidad y el precio base.</p>
+</div>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<!-- Option 2 -->
+<button class="option-card w-full p-stack-lg border border-outline-variant rounded-lg text-left transition-all duration-300 flex items-center justify-between group" onclick="selectOption(this)">
+<div>
+<h3 class="font-headline-md text-headline-md mb-1">Esenciales de calidad</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Inversión moderada en piezas duraderas.</p>
+</div>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<!-- Option 3 -->
+<button class="option-card w-full p-stack-lg border border-outline-variant rounded-lg text-left transition-all duration-300 flex items-center justify-between group" onclick="selectOption(this)">
+<div>
+<h3 class="font-headline-md text-headline-md mb-1">Premium / Contemporáneo</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Busco diseño y materiales superiores.</p>
+</div>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<!-- Option 4 -->
+<button class="option-card w-full p-stack-lg border border-outline-variant rounded-lg text-left transition-all duration-300 flex items-center justify-between group" onclick="selectOption(this)">
+<div>
+<h3 class="font-headline-md text-headline-md mb-1">Lujo</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Piezas exclusivas y colecciones de diseñador.</p>
+</div>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+</div>
+<!-- Action Button -->
+<div class="w-full animate-fade-in-up delay-3">
+<button class="w-full bg-ink-black text-white font-label-caps text-label-caps py-stack-lg rounded-lg opacity-20 cursor-not-allowed transition-all duration-500 uppercase tracking-[0.2em]" disabled="" id="final-cta" onclick="startCalculation()">
+                Finalizar Perfil
+            </button>
+</div>
+</main>
+<!-- Success / Calculation Screen (Hidden by default) -->
+<section class="hidden fixed inset-0 bg-sand-bg z-[100] flex flex-col items-center justify-center text-center px-gutter" id="calc-screen">
+<div class="relative w-32 h-32 mb-stack-lg">
+<!-- Pulsing Circle Decoration -->
+<div class="absolute inset-0 border-2 border-coral-muted rounded-full animate-ping opacity-25"></div>
+<div class="absolute inset-2 border-2 border-coral-vibrant rounded-full animate-pulse opacity-50"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-display-lg text-ink-black">auto_awesome</span>
+</div>
+</div>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg mb-stack-md">Analizando tu ADN de estilo</h2>
+<div class="w-64 h-[2px] bg-surface-container overflow-hidden mx-auto mb-stack-md">
+<div class="h-full bg-ink-black w-0 transition-all duration-[3000ms] ease-out" id="calc-loader"></div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant" id="calc-status">Curando recomendaciones personalizadas...</p>
+<!-- Floating Visual Elements (Editorial Background) -->
+<div class="absolute top-10 left-10 w-48 h-64 bg-white shadow-xl rotate-[-6deg] hidden lg:block overflow-hidden rounded-lg opacity-40">
+<img class="w-full h-full object-cover" data-alt="A high-end editorial fashion photograph featuring a minimalist black dress against a neutral architectural background. The lighting is soft and directional, emphasizing the texture of the fabric. The overall mood is sophisticated, exclusive, and quiet luxury, perfectly matching the MODA brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmLhCnPoH8d_HnNmIxtEwRI9bu0FUr3S-4hCgtroJ6_WCSb6nl0P8PAax_GyDcIULuRjpC3EdutU0aCOPFMOU900Yn1kTgN8tITxjeOOQjMBIBP7hs2A0xIFT3JNjHwWXigI64Yq3xYLBoPX-z1lcWpX_QFYevJVw42Vu0f-WS0mk3eikGJDD4Iu-QchU7YuYZdFhsKjlssDQqFSy95nWO5G17Zy3Z8B8c5GmfRvAr-q2CuPXpJyyZ7qBdPiNhvASbtPSVOStSFA"/>
+</div>
+<div class="absolute bottom-10 right-10 w-48 h-64 bg-white shadow-xl rotate-[4deg] hidden lg:block overflow-hidden rounded-lg opacity-40">
+<img class="w-full h-full object-cover" data-alt="Modern street style fashion shot in an airy urban environment. A model wears a structured beige blazer with clean lines and minimal accessories. High-key natural lighting creates a bright, optimistic aesthetic. The composition is spacious with plenty of white space around the subject, following a premium digital editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEJsGYQfHbzy7bR54Oe9lFsQPuS40DMkTN4obf6XcUeaMTXqn2EzdcAGkt0VAB5w7Jr_Zk8h3UeJfIIV8ZQ2FdRSwjKJkre_mXD_ZqA78dhPlvIArsh8J0HVCBL5dMMHQC3ofIG-D-FUFLzmqyb3sBh3XJpQj5qDziiZMyJG96Y6aCZ-h1pU9AEoJ0mCYwiqczv1ArocVEaquxtCWOUip8GUe-0upZsf8v3hBx2lfRA2Np53S9H2Erjm2kSwA9TucpaIGTeD6pgA"/>
+</div>
+</section>
+<script>
+        function selectOption(element) {
+            // Clear all active states
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Set active state
+            element.classList.add('active');
+            
+            // Enable CTA
+            const cta = document.getElementById('final-cta');
+            cta.disabled = false;
+            cta.classList.remove('opacity-20', 'cursor-not-allowed');
+            cta.classList.add('hover:bg-opacity-90', 'active:scale-95');
+        }
+
+        function startCalculation() {
+            // Update Progress Bar to 100%
+            document.getElementById('progress-bar').style.width = '100%';
+            
+            // Fade out main content
+            const main = document.getElementById('main-canvas');
+            main.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            main.style.opacity = '0';
+            main.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                // Show calculation screen
+                const calcScreen = document.getElementById('calc-screen');
+                calcScreen.classList.remove('hidden');
+                calcScreen.classList.add('animate-fade-in-up');
+                
+                // Start loader
+                setTimeout(() => {
+                    document.getElementById('calc-loader').style.width = '100%';
+                    
+                    // Update status text progressively
+                    const statusText = document.getElementById('calc-status');
+                    setTimeout(() => statusText.innerText = "Sincronizando con colecciones de temporada...", 1000);
+                    setTimeout(() => statusText.innerText = "Perfil listo. Bienvenido a MODA.", 2200);
+                    
+                    // Final redirect/transition (simulation)
+                    setTimeout(() => {
+                        calcScreen.style.transition = 'opacity 1s ease';
+                        calcScreen.style.opacity = '0';
+                        // In a real app, window.location.href = '/dashboard';
+                        console.log("Onboarding Complete");
+                    }, 3500);
+                }, 100);
+            }, 800);
+        }
+    </script>
+</body></html>

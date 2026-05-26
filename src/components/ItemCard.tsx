@@ -1,0 +1,38 @@
+interface ItemCardProps {
+  name: string;
+  price: number;
+  image: string;
+  matchScore: number;
+  isTopMatch?: boolean;
+}
+
+export default function ItemCard({ name, price, image, matchScore, isTopMatch }: ItemCardProps) {
+  return (
+    <div className="group cursor-pointer">
+      <div className="relative aspect-[4/5] overflow-hidden bg-surface-container mb-4">
+        <img
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          src={image}
+          alt={name}
+          loading="lazy"
+        />
+        <div
+          className={`absolute top-4 right-4 px-3 py-1 rounded-full flex items-center gap-1 ${
+            isTopMatch
+              ? "bg-coral-vibrant"
+              : "bg-white/70 backdrop-blur-[8px]"
+          }`}
+        >
+          <span className={`text-label-caps ${isTopMatch ? "text-white" : "text-ink-black"}`}>
+            {isTopMatch ? "99% TOP MATCH" : `${matchScore}% MATCH`}
+          </span>
+        </div>
+        <button className="absolute bottom-4 right-4 bg-ink-black text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="material-symbols-outlined">add</span>
+        </button>
+      </div>
+      <h3 className="text-body-md font-medium text-ink-black">{name}</h3>
+      <p className="text-price-tag text-on-surface-variant">€{price.toFixed(2)}</p>
+    </div>
+  );
+}

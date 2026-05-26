@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ItemCard from "@/components/ItemCard";
+import { seedItems, categoryLabels } from "@/infrastructure/firebase/seedData";
+import { seedOutfits } from "@/infrastructure/firebase/seedSocialData";
 
 interface Product {
-  id: string; name: string; price: number; image: string; matchScore: number;
+  id: string; name: string; price: number; image: string; matchScore: number; category: string;
 }
 
 interface OutfitPreview {
@@ -18,25 +20,43 @@ export default function LandingPage() {
   const [user, setUser] = useState<{ displayName?: string } | null>(null);
 
   useEffect(() => {
-    fetch("/api/recommendations?userId=seed&type=items")
-      .then(r => r.json())
-      .then(data => setProducts(data.slice(0, 8)))
-      .catch(() => {});
-
-    fetch("/api/feed?userId=seed&type=discover")
+    fetch("/api/products")
       .then(r => r.json())
       .then(data => {
-        const outfits = (data as Array<{ id: string; name: string; description: string; image?: string; metadata?: Record<string, unknown> }>).slice(0, 4);
-        setCollections(outfits.map(o => ({
-          id: o.id,
-          name: o.name,
-          description: o.description,
-          image: o.image ?? "",
-          userDisplayName: (o.metadata?.userDisplayName as string) ?? "Usuario",
-          likes: (o.metadata?.likes as number) ?? 0,
-        })));
+        if (data?.items?.length) {
+          setProducts(data.items.slice(0, 8).map((i: { id: string; name: string; price: number; images: string[]; category: string }) => ({
+            id: i.id,
+            name: i.name,
+            price: i.price,
+            image: i.images?.[0] ?? "",
+            matchScore: 100,
+            category: i.category,
+          })));
+        }
       })
-      .catch(() => {});
+      .catch(() => {
+        const fallback = seedItems.slice(0, 8).map(i => ({
+          id: i.id,
+          name: i.name,
+          price: i.price,
+          image: i.images?.[0] ?? "",
+          matchScore: 100,
+          category: i.category,
+        }));
+        setProducts(fallback);
+      });
+
+    const activeOutfits = seedOutfits.filter(o => o.privacy === "public").slice(0, 4);
+    setCollections(
+      activeOutfits.map(o => ({
+        id: o.id,
+        name: o.name,
+        description: o.description ?? "",
+        image: o.items[0]?.image ?? "",
+        userDisplayName: o.userDisplayName,
+        likes: o.likes,
+      }))
+    );
 
     const stored = localStorage.getItem("moda_user");
     if (stored) setUser(JSON.parse(stored));
@@ -134,7 +154,7 @@ export default function LandingPage() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
             {products.length === 0 ? (
-              Array.from({ length: 4 }).map((_, i) => (
+              Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="animate-pulse">
                   <div className="aspect-[4/5] bg-surface-container mb-4" />
                   <div className="h-4 bg-surface-container rounded w-3/4 mb-2" />
@@ -150,14 +170,15 @@ export default function LandingPage() {
                   image={p.image}
                   matchScore={p.matchScore}
                   isTopMatch={i === 0}
+                  categoryLabel={categoryLabels[p.category] ?? ""}
                 />
               ))
             )}
           </div>
         </section>
 
-        <section id="colecciones" className="py-16 md:py-24 px-5 md:px-6 max-w-[1280px] mx-auto bg-surface-container-low -mx-5 md:-mx-6 md:px-6">
-          <div className="max-w-[1280px] mx-auto">
+        <section className="bg-surface-container-low">
+          <div id="colecciones" className="py-16 md:py-24 px-5 md:px-6 max-w-[1280px] mx-auto">
             <div className="flex justify-between items-end mb-10">
               <div>
                 <span className="text-label-caps uppercase tracking-widest text-on-surface-variant mb-2 block">Comunidad</span>

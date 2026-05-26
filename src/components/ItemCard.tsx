@@ -46,7 +46,7 @@ export default function ItemCard({ name, price, image, matchScore, isTopMatch, c
         </button>
       </div>
       <h3 className="text-body-md font-medium text-ink-black">{name}</h3>
-      <p className="text-price-tag text-on-surface-variant">€{price.toFixed(2)}</p>
+      <p className="text-price-tag text-on-surface-variant">C${price.toFixed(2)}</p>
     </div>
   );
 }

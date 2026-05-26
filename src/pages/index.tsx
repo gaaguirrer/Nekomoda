@@ -103,7 +103,7 @@ export default function LandingPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-sand-bg/60 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-sm p-4">
                 <p className="text-body-md font-medium">Chaqueta Cuero 'Clásica'</p>
-                <p className="text-price-tag text-coral-vibrant">€680</p>
+                <p className="text-price-tag text-coral-vibrant">C$680</p>
               </div>
             </div>
           </div>

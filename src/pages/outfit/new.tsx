@@ -149,7 +149,7 @@ export default function NewOutfitPage() {
                   </div>
                   <div className="p-2">
                     <p className="text-body-md font-medium truncate">{item.name}</p>
-                    <p className="text-label-caps text-on-surface-variant">€{item.price.toFixed(2)}</p>
+                    <p className="text-label-caps text-on-surface-variant">C${item.price.toFixed(2)}</p>
                   </div>
                   {isSelected && (
                     <div className="absolute top-2 right-2 bg-ink-black text-white rounded-full w-6 h-6 flex items-center justify-center">

@@ -25,7 +25,7 @@ export default function RegisterPage() {
       if (!res.ok) throw new Error(data.error);
       localStorage.setItem("moda_user_id", data.user.uid);
       localStorage.setItem("moda_user", JSON.stringify(data.user));
-      router.push("/");
+      router.push("/onboarding");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al registrarse");
     } finally {

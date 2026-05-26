@@ -1,205 +1,224 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { submitAnswers } from "@/infrastructure/web/lib/recommendations";
-import { getOrCreateUserId } from "@/infrastructure/web/lib/userId";
+import ItemCard from "@/components/ItemCard";
 
-const QUESTIONS = [
-  {
-    question: "¿Cómo defines tu estilo diario?",
-    subtitle: "Esta elección nos ayuda a curar prendas que realmente se adapten a tu ritmo de vida.",
-    options: [
-      { value: "a", label: "Muy casual", icon: "weekend" },
-      { value: "b", label: "Casual", icon: "dry_cleaning" },
-      { value: "c", label: "Semi-formal", icon: "styler" },
-      { value: "d", label: "Formal", icon: "work" },
-      { value: "e", label: "Muy formal", icon: "diamond" },
-    ],
-  },
-  {
-    question: "¿Qué colores predominan en tu armario?",
-    subtitle: "Tu paleta de colores nos dice mucho sobre tu personalidad.",
-    options: [
-      { value: "a", label: "Solo neutros", icon: "contrast" },
-      { value: "b", label: "Mayoría neutros", icon: "invert_colors" },
-      { value: "c", label: "Equilibrio", icon: "palette" },
-      { value: "d", label: "Mayoría vibrantes", icon: "flare" },
-      { value: "e", label: "Solo vibrantes", icon: "colorize" },
-    ],
-  },
-  {
-    question: "¿Prefieres prendas lisas o con estampados?",
-    subtitle: "Los detalles marcan la diferencia en tu look.",
-    options: [
-      { value: "a", label: "Siempre lisas", icon: "checkroom" },
-      { value: "b", label: "Casi lisas", icon: "cottage" },
-      { value: "c", label: "Ambas", icon: "style" },
-      { value: "d", label: "Detalles moderados", icon: "auto_awesome" },
-      { value: "e", label: "Estampados llamativos", icon: "celebration" },
-    ],
-  },
-  {
-    question: "¿Qué tipo de eventos frecuentas?",
-    subtitle: "Queremos recomendarte prendas para cada ocasión.",
-    options: [
-      { value: "a", label: "Solo diario/trabajo", icon: "business_center" },
-      { value: "b", label: "Reuniones informales", icon: "groups" },
-      { value: "c", label: "Salidas casuales", icon: "local_cafe" },
-      { value: "d", label: "Cenas y fiestas", icon: "dinner_dining" },
-      { value: "e", label: "Fiestas y galas", icon: "celebration" },
-    ],
-  },
-  {
-    question: "¿Cuánto inviertes normalmente en una prenda?",
-    subtitle: "Selecciona el rango que mejor represente tu filosofía de compra.",
-    options: [
-      { value: "a", label: "Mínimo indispensable", icon: "savings" },
-      { value: "b", label: "Económico", icon: "shopping_cart" },
-      { value: "c", label: "Moderado", icon: "shopping_bag" },
-      { value: "d", label: "Alto", icon: "card_membership" },
-      { value: "e", label: "Lujo", icon: "diamond" },
-    ],
-  },
-];
-
-export default function OnboardingPage() {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<string[]>([]);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [showCalc, setShowCalc] = useState(false);
-  const router = useRouter();
-
-  const handleSelect = useCallback((value: string) => {
-    setSelected(value);
-  }, []);
-
-  const handleSubmit = useCallback(async (finalAnswers: string[]) => {
-    setLoading(true);
-    try {
-      const userId = getOrCreateUserId();
-      await submitAnswers(finalAnswers, userId);
-      setShowCalc(true);
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 3500);
-    } catch {
-      setLoading(false);
-    }
-  }, [router]);
-
-  const handleNext = useCallback(() => {
-    if (!selected) return;
-    const newAnswers = [...answers, selected];
-    setAnswers(newAnswers);
-    setSelected(null);
-
-    if (step < QUESTIONS.length - 1) {
-      setStep(s => s + 1);
-    } else {
-      handleSubmit(newAnswers);
-    }
-  }, [selected, answers, step, handleSubmit]);
-
-  const handleSkip = useCallback(() => {
-    router.push("/dashboard");
-  }, [router]);
-
-  if (showCalc) {
-    return <CalculationScreen />;
-  }
-
-  const currentQuestion = QUESTIONS[step];
-  const progress = ((step + 1) / QUESTIONS.length) * 100;
-
-  return (
-    <div className="min-h-screen flex flex-col bg-sand-bg">
-      <div className="fixed top-0 left-0 w-full h-1 bg-surface-container-high z-[60]">
-        <div
-          className="h-full bg-coral-vibrant transition-all duration-700 ease-out"
-          style={{ width: `${progress}%`, boxShadow: "0 0 8px rgba(255, 127, 80, 0.4)" }}
-        />
-      </div>
-
-      <main className="flex-grow flex flex-col items-center justify-center px-5 md:px-6 py-20 max-w-[600px] mx-auto w-full">
-        <div className="mb-8 flex items-center gap-2">
-          <span className="text-label-caps text-on-surface-variant uppercase tracking-widest">
-            Paso {step + 1} de {QUESTIONS.length}
-          </span>
-        </div>
-
-        <header className="text-center mb-16 w-full">
-          <h1 className="text-display-lg-mobile md:text-display-lg mb-6 text-ink-black tracking-tight leading-tight">
-            {currentQuestion.question}
-          </h1>
-          <p className="text-body-lg text-on-surface-variant">{currentQuestion.subtitle}</p>
-        </header>
-
-        <div className="w-full space-y-4">
-          {currentQuestion.options.map(opt => (
-            <button
-              key={opt.value}
-              onClick={() => handleSelect(opt.value)}
-              className={`w-full group flex items-center justify-between p-6 sm:p-8 bg-surface-container-lowest border transition-all duration-200 active:scale-[0.98] ${
-                selected === opt.value
-                  ? "border-2 border-ink-black bg-surface-container"
-                  : "border border-outline-variant hover:border-ink-black"
-              }`}
-            >
-              <div className="flex items-center gap-4">
-                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-ink-black">
-                  {opt.icon}
-                </span>
-                <span className="text-body-lg">{opt.label}</span>
-              </div>
-              <span className={`material-symbols-outlined transition-opacity ${
-                selected === opt.value ? "opacity-100" : "opacity-0"
-              } text-ink-black`}>
-                check_circle
-              </span>
-            </button>
-          ))}
-        </div>
-
-        <footer className="mt-16 w-full flex flex-col gap-4">
-          <button
-            onClick={handleNext}
-            disabled={!selected || loading}
-            className="w-full py-4 bg-ink-black text-surface-bright text-label-caps uppercase tracking-widest disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 hover:bg-on-primary-fixed-variant"
-          >
-            {loading ? "Procesando..." : step < QUESTIONS.length - 1 ? "Continuar" : "Finalizar Perfil"}
-          </button>
-          <button
-            onClick={handleSkip}
-            className="w-full py-3 text-on-surface-variant text-label-caps uppercase tracking-widest hover:text-ink-black transition-colors"
-          >
-            Omitir por ahora
-          </button>
-        </footer>
-      </main>
-    </div>
-  );
+interface Product {
+  id: string; name: string; price: number; image: string; matchScore: number;
 }
 
-function CalculationScreen() {
+interface OutfitPreview {
+  id: string; name: string; description: string; image: string; userDisplayName?: string; likes: number;
+}
+
+export default function LandingPage() {
+  const router = useRouter();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [collections, setCollections] = useState<OutfitPreview[]>([]);
+  const [user, setUser] = useState<{ displayName?: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/recommendations?userId=seed&type=items")
+      .then(r => r.json())
+      .then(data => setProducts(data.slice(0, 8)))
+      .catch(() => {});
+
+    fetch("/api/feed?userId=seed&type=discover")
+      .then(r => r.json())
+      .then(data => {
+        const outfits = (data as Array<{ id: string; name: string; description: string; image?: string; metadata?: Record<string, unknown> }>).slice(0, 4);
+        setCollections(outfits.map(o => ({
+          id: o.id,
+          name: o.name,
+          description: o.description,
+          image: o.image ?? "",
+          userDisplayName: (o.metadata?.userDisplayName as string) ?? "Usuario",
+          likes: (o.metadata?.likes as number) ?? 0,
+        })));
+      })
+      .catch(() => {});
+
+    const stored = localStorage.getItem("moda_user");
+    if (stored) setUser(JSON.parse(stored));
+  }, []);
+
+  const isLoggedIn = !!user;
+
   return (
-    <section className="fixed inset-0 bg-sand-bg z-[100] flex flex-col items-center justify-center text-center px-6 animate-fade-in-up">
-      <div className="relative w-32 h-32 mb-8">
-        <div className="absolute inset-0 border-2 border-coral-muted rounded-full animate-ping opacity-25" />
-        <div className="absolute inset-2 border-2 border-coral-vibrant rounded-full animate-pulse opacity-50" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="material-symbols-outlined text-5xl text-ink-black">auto_awesome</span>
+    <div className="min-h-screen bg-sand-bg">
+      <header className="fixed top-0 w-full z-50 bg-sand-bg/95 backdrop-blur-sm h-20 border-b border-outline-variant/50">
+        <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
+          <span className="text-[36px] md:text-[48px] font-semibold tracking-tight text-ink-black">MODA</span>
+          <nav className="hidden md:flex items-center gap-8">
+            <Link href="/#productos" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Productos</Link>
+            <Link href="/#colecciones" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Colecciones</Link>
+            {isLoggedIn ? (
+              <>
+                <Link href="/dashboard" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Dashboard</Link>
+                <Link href="/settings" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Ajustes</Link>
+                <button onClick={() => router.push("/profile")} className="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+                  <span className="material-symbols-outlined text-ink-black text-2xl">person</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="px-5 py-2 border border-ink-black text-ink-black text-label-caps uppercase tracking-widest hover:bg-ink-black hover:text-white transition-colors">Entrar</Link>
+                <Link href="/register" className="px-5 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-colors">Registro</Link>
+              </>
+            )}
+          </nav>
+          <div className="md:hidden flex items-center gap-3">
+            {isLoggedIn ? (
+              <button onClick={() => router.push("/dashboard")} className="w-8 h-8 rounded-full bg-surface-container overflow-hidden flex items-center justify-center">
+                <span className="material-symbols-outlined text-ink-black">person</span>
+              </button>
+            ) : (
+              <Link href="/login" className="px-4 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest text-xs">Entrar</Link>
+            )}
+          </div>
         </div>
-      </div>
-      <h2 className="text-display-lg-mobile md:text-display-lg mb-6">Analizando tu ADN de estilo</h2>
-      <div className="w-64 h-[2px] bg-surface-container overflow-hidden mx-auto mb-6">
-        <div
-          className="h-full bg-ink-black transition-all duration-[3000ms] ease-out"
-          style={{ width: "100%" }}
-        />
-      </div>
-      <p className="text-body-lg text-on-surface-variant" id="calc-status">
-        Curando recomendaciones personalizadas...
-      </p>
-    </section>
+      </header>
+
+      <main>
+        <section className="pt-32 pb-20 md:pb-32 px-5 md:px-6 max-w-[1280px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <span className="text-label-caps uppercase tracking-widest text-coral-vibrant mb-4 block">MODA — Personal Shopping IA</span>
+              <h1 className="text-display-lg-mobile md:text-display-lg leading-tight mb-6 text-ink-black">
+                Descubre tu estilo con inteligencia artificial
+              </h1>
+              <p className="text-body-lg text-on-surface-variant max-w-lg mb-8">
+                Respondes 5 preguntas sobre tus gustos y nuestro algoritmo encuentra las prendas, eventos y promociones perfectas para ti.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                {isLoggedIn ? (
+                  <Link href="/dashboard" className="px-8 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest text-center hover:bg-on-primary-fixed-variant transition-colors">
+                    Ir al Dashboard
+                  </Link>
+                ) : (
+                  <Link href="/register" className="px-8 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest text-center hover:bg-on-primary-fixed-variant transition-colors">
+                    Comenzar Ahora
+                  </Link>
+                )}
+                <Link href="/#productos" className="px-8 py-4 border border-outline-variant text-ink-black text-label-caps uppercase tracking-widest text-center hover:border-ink-black transition-colors">
+                  Explorar Productos
+                </Link>
+              </div>
+            </div>
+            <div className="relative aspect-[4/5] md:aspect-auto md:h-[600px] bg-surface-container overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&q=80"
+                alt="Fashion"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-sand-bg/60 to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-sm p-4">
+                <p className="text-body-md font-medium">Chaqueta Cuero 'Clásica'</p>
+                <p className="text-price-tag text-coral-vibrant">€680</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="productos" className="py-16 md:py-24 px-5 md:px-6 max-w-[1280px] mx-auto">
+          <div className="flex justify-between items-end mb-10">
+            <div>
+              <span className="text-label-caps uppercase tracking-widest text-on-surface-variant mb-2 block">Catálogo</span>
+              <h2 className="text-headline-md md:text-display-lg-mobile">Productos Destacados</h2>
+            </div>
+            {isLoggedIn && (
+              <Link href="/dashboard" className="text-label-caps uppercase tracking-widest text-ink-black border-b border-ink-black pb-0.5">
+                Ver todos →
+              </Link>
+            )}
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
+            {products.length === 0 ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-[4/5] bg-surface-container mb-4" />
+                  <div className="h-4 bg-surface-container rounded w-3/4 mb-2" />
+                  <div className="h-4 bg-surface-container rounded w-1/4" />
+                </div>
+              ))
+            ) : (
+              products.map((p, i) => (
+                <ItemCard
+                  key={p.id}
+                  name={p.name}
+                  price={p.price}
+                  image={p.image}
+                  matchScore={p.matchScore}
+                  isTopMatch={i === 0}
+                />
+              ))
+            )}
+          </div>
+        </section>
+
+        <section id="colecciones" className="py-16 md:py-24 px-5 md:px-6 max-w-[1280px] mx-auto bg-surface-container-low -mx-5 md:-mx-6 md:px-6">
+          <div className="max-w-[1280px] mx-auto">
+            <div className="flex justify-between items-end mb-10">
+              <div>
+                <span className="text-label-caps uppercase tracking-widest text-on-surface-variant mb-2 block">Comunidad</span>
+                <h2 className="text-headline-md md:text-display-lg-mobile">Colecciones Populares</h2>
+              </div>
+              <Link href="/feed" className="text-label-caps uppercase tracking-widest text-ink-black border-b border-ink-black pb-0.5">
+                Explorar todo →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {collections.length === 0 ? (
+                Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="aspect-[4/3] bg-surface-container mb-4" />
+                    <div className="h-4 bg-surface-container rounded w-3/4 mb-2" />
+                    <div className="h-3 bg-surface-container rounded w-1/2" />
+                  </div>
+                ))
+              ) : (
+                collections.map(col => (
+                  <Link key={col.id} href="/feed" className="group cursor-pointer">
+                    <div className="aspect-[4/3] bg-surface-container overflow-hidden mb-3">
+                      <img
+                        src={col.image}
+                        alt={col.name}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                    <h3 className="text-body-md font-medium">{col.name}</h3>
+                    <p className="text-label-caps text-on-surface-variant">{col.userDisplayName} · {col.likes} likes</p>
+                  </Link>
+                ))
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 md:py-24 px-5 md:px-6 max-w-[1280px] mx-auto text-center">
+          <h2 className="text-display-lg-mobile md:text-display-lg mb-4">¿Listo para transformar tu estilo?</h2>
+          <p className="text-body-lg text-on-surface-variant max-w-lg mx-auto mb-8">
+            {isLoggedIn ? "Completa tu perfil de estilo y recibe recomendaciones hechas a tu medida." : "Regístrate gratis, responde 5 preguntas y descubre un mundo de moda personalizada."}
+          </p>
+          {isLoggedIn ? (
+            <Link href="/onboarding" className="inline-block px-8 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-colors">
+              {user?.displayName ? `Hola ${user.displayName}, tu estilo →` : "Mi Perfil de Estilo →"}
+            </Link>
+          ) : (
+            <Link href="/register" className="inline-block px-8 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-colors">
+              Crear Cuenta Gratis
+            </Link>
+          )}
+        </section>
+      </main>
+
+      <footer className="border-t border-outline-variant py-8 px-5 md:px-6">
+        <div className="max-w-[1280px] mx-auto flex justify-between items-center">
+          <span className="text-lg font-semibold tracking-tight">MODA</span>
+          <p className="text-label-caps text-on-surface-variant">© 2026 MODA — Personal Shopping con IA</p>
+        </div>
+      </footer>
+    </div>
   );
 }

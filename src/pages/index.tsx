@@ -1,86 +1,32 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ItemCard from "@/components/ItemCard";
 import { seedItems, categoryLabels } from "@/infrastructure/firebase/seedData";
-import { seedOutfits, seedCollections } from "@/infrastructure/firebase/seedSocialData";
+import { seedCollections } from "@/infrastructure/firebase/seedSocialData";
 
 interface Product {
   id: string; name: string; price: number; image: string; matchScore: number; category: string;
 }
 
-interface OutfitPreview {
-  id: string; name: string; description: string; image: string; userDisplayName?: string; likes: number;
-}
-
 export default function LandingPage() {
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [collections, setCollections] = useState<OutfitPreview[]>([]);
   const [user, setUser] = useState<{ displayName?: string } | null>(null);
 
+  const products: Product[] = seedItems.slice(0, 8).map(i => ({
+    id: i.id, name: i.name, price: i.price,
+    image: i.images?.[0] ?? "",
+    matchScore: 100, category: i.category,
+  }));
+
+  const collections = seedCollections.slice(0, 4).map(c => ({
+    id: c.id, name: c.name, description: c.description ?? "",
+    image: c.coverImage ?? "",
+    userDisplayName: c.userDisplayName ?? "Usuario",
+    likes: c.likes,
+  }));
+
   useEffect(() => {
-    fetch("/api/products")
-      .then(r => {
-        if (!r.ok) throw new Error("HTTP error " + r.status);
-        return r.json();
-      })
-      .then(data => {
-        if (data?.items?.length) {
-          setProducts(data.items.slice(0, 8).map((i: { id: string; name: string; price: number; images: string[]; category: string }) => ({
-            id: i.id,
-            name: i.name,
-            price: i.price,
-            image: i.images?.[0] ?? "",
-            matchScore: 100,
-            category: i.category,
-          })));
-        } else {
-          throw new Error("No products in data");
-        }
-      })
-      .catch(() => {
-        const fallback = seedItems.slice(0, 8).map(i => ({
-          id: i.id,
-          name: i.name,
-          price: i.price,
-          image: i.images?.[0] ?? "",
-          matchScore: 100,
-          category: i.category,
-        }));
-        setProducts(fallback);
-      });
-
-    fetch("/api/collections")
-      .then(r => {
-        if (!r.ok) throw new Error("HTTP error " + r.status);
-        return r.json();
-      })
-      .then(data => {
-        if (data && Array.isArray(data) && data.length > 0) {
-          setCollections(data.slice(0, 4).map((c: any) => ({
-            id: c.id,
-            name: c.name,
-            description: c.description ?? "",
-            image: c.coverImage ?? c.image ?? "",
-            userDisplayName: c.userDisplayName ?? "Usuario",
-            likes: c.likes ?? 0,
-          })));
-        } else {
-          throw new Error("Empty collections");
-        }
-      })
-      .catch(() => {
-        setCollections(seedCollections.slice(0, 4).map(c => ({
-          id: c.id,
-          name: c.name,
-          description: c.description ?? "",
-          image: c.coverImage ?? "",
-          userDisplayName: c.userDisplayName ?? "Usuario",
-          likes: c.likes,
-        })));
-      });
-
     const stored = localStorage.getItem("moda_user");
     if (stored) setUser(JSON.parse(stored));
   }, []);
@@ -176,64 +122,44 @@ export default function LandingPage() {
             )}
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
-            {products.length === 0 ? (
-              Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="aspect-[4/5] bg-surface-container mb-4" />
-                  <div className="h-4 bg-surface-container rounded w-3/4 mb-2" />
-                  <div className="h-4 bg-surface-container rounded w-1/4" />
-                </div>
-              ))
-            ) : (
-              products.map((p, i) => (
-                <ItemCard
-                  key={p.id}
-                  name={p.name}
-                  price={p.price}
-                  image={p.image}
-                  matchScore={p.matchScore}
-                  isTopMatch={i === 0}
-                  categoryLabel={categoryLabels[p.category] ?? ""}
-                />
-              ))
-            )}
+            {products.map((p, i) => (
+              <ItemCard
+                key={p.id}
+                name={p.name}
+                price={p.price}
+                image={p.image}
+                matchScore={p.matchScore}
+                isTopMatch={i === 0}
+                categoryLabel={categoryLabels[p.category] ?? ""}
+              />
+            ))}
           </div>
         </section>
 
         <section className="bg-surface-container-low">
           <div id="colecciones" className="py-16 md:py-24 px-5 md:px-6 max-w-[1280px] mx-auto">
-            <div className="flex flex-col items-center text-center mb-10">
+            <div className="w-full text-center mb-10">
               <span className="text-label-caps uppercase tracking-widest text-on-surface-variant mb-2 block">Comunidad</span>
               <h2 className="text-headline-md md:text-display-lg-mobile mb-4">Colecciones Populares</h2>
-              <Link href="/feed" className="text-label-caps uppercase tracking-widest text-ink-black border-b border-ink-black pb-0.5">
+              <Link href="/feed" className="inline-block text-label-caps uppercase tracking-widest text-ink-black border-b border-ink-black pb-0.5">
                 Explorar todo →
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {collections.length === 0 ? (
-                Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="animate-pulse flex flex-col items-center text-center">
-                    <div className="aspect-[4/3] w-full bg-surface-container mb-4" />
-                    <div className="h-4 bg-surface-container rounded w-3/4 mb-2" />
-                    <div className="h-3 bg-surface-container rounded w-1/2" />
+              {collections.map(col => (
+                <Link key={col.id} href="/feed" className="group cursor-pointer text-center block">
+                  <div className="aspect-[4/3] w-full bg-surface-container overflow-hidden mb-3">
+                    <img
+                      src={col.image}
+                      alt={col.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      loading="lazy"
+                    />
                   </div>
-                ))
-              ) : (
-                collections.map(col => (
-                  <Link key={col.id} href="/feed" className="group cursor-pointer text-center flex flex-col items-center">
-                    <div className="aspect-[4/3] w-full bg-surface-container overflow-hidden mb-3">
-                      <img
-                        src={col.image}
-                        alt={col.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    </div>
-                    <h3 className="text-body-md font-medium">{col.name}</h3>
-                    <p className="text-label-caps text-on-surface-variant">{col.userDisplayName} · {col.likes} likes</p>
-                  </Link>
-                ))
-              )}
+                  <h3 className="text-body-md font-medium">{col.name}</h3>
+                  <p className="text-label-caps text-on-surface-variant">{col.userDisplayName} · {col.likes} likes</p>
+                </Link>
+              ))}
             </div>
           </div>
         </section>

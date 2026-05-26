@@ -4,9 +4,18 @@ interface ItemCardProps {
   image: string;
   matchScore: number;
   isTopMatch?: boolean;
+  categoryLabel?: string;
 }
 
-export default function ItemCard({ name, price, image, matchScore, isTopMatch }: ItemCardProps) {
+const categoryColors: Record<string, string> = {
+  "Parte Superior": "bg-sky-100 text-sky-800",
+  "Parte Inferior": "bg-amber-100 text-amber-800",
+  Vestidos: "bg-rose-100 text-rose-800",
+  Calzado: "bg-emerald-100 text-emerald-800",
+  Accesorios: "bg-violet-100 text-violet-800",
+};
+
+export default function ItemCard({ name, price, image, matchScore, isTopMatch, categoryLabel }: ItemCardProps) {
   return (
     <div className="group cursor-pointer">
       <div className="relative aspect-[4/5] overflow-hidden bg-surface-container mb-4">
@@ -16,6 +25,11 @@ export default function ItemCard({ name, price, image, matchScore, isTopMatch }:
           alt={name}
           loading="lazy"
         />
+        {categoryLabel && (
+          <span className={`absolute top-4 left-4 px-2.5 py-0.5 rounded-full text-label-caps text-[11px] ${categoryColors[categoryLabel] ?? "bg-white/70 text-ink-black"}`}>
+            {categoryLabel}
+          </span>
+        )}
         <div
           className={`absolute top-4 right-4 px-3 py-1 rounded-full flex items-center gap-1 ${
             isTopMatch

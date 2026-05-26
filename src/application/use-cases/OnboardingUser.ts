@@ -27,6 +27,9 @@ export class OnboardingUser {
       await this.userRepo.save({
         id: dto.userId,
         ...userData,
+        followerCount: 0,
+        followingCount: 0,
+        outfitCount: 0,
         createdAt: new Date().toISOString(),
       });
     }

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { apiPost } from "@/infrastructure/web/lib/apiClient";
+import { apiGet, apiPost } from "@/infrastructure/web/lib/apiClient";
 import { getUserId } from "@/infrastructure/demo/demoMode";
 
 const QUESTIONS = [
@@ -62,12 +62,38 @@ const QUESTIONS = [
   },
 ];
 
+const Q_IDS = ["q1", "q2", "q3", "q4", "q5"];
+
 export default function SettingsPage() {
   const router = useRouter();
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
+  const [loadingProfile, setLoadingProfile] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const userId = getUserId();
+      try {
+        const res = await apiGet("/api/onboarding", { userId });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.answers) {
+            const loaded: Record<string, string> = {};
+            data.answers.forEach((ans: string, i: number) => {
+              loaded[Q_IDS[i]] = ans;
+            });
+            setAnswers(loaded);
+          }
+        }
+      } catch {
+      } finally {
+        setLoadingProfile(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const setAnswer = (qId: string, value: string) => {
     setAnswers(prev => ({ ...prev, [qId]: value }));
@@ -75,8 +101,7 @@ export default function SettingsPage() {
   };
 
   const handleSave = async () => {
-    const qIds = ["q1", "q2", "q3", "q4", "q5"];
-    const allAnswered = qIds.every(id => answers[id]);
+    const allAnswered = Q_IDS.every(id => answers[id]);
     if (!allAnswered) {
       setError("Responde todas las preguntas");
       return;
@@ -85,7 +110,7 @@ export default function SettingsPage() {
     setSaving(true);
     setError("");
     const userId = getUserId();
-    const mappedAnswers = qIds.map(id => answers[id]);
+    const mappedAnswers = Q_IDS.map(id => answers[id]);
 
     try {
       const res = await apiPost("/api/onboarding", { userId, answers: mappedAnswers });
@@ -103,6 +128,8 @@ export default function SettingsPage() {
     }
   };
 
+  const allAnswered = Q_IDS.every(id => answers[id]);
+
   return (
     <div className="min-h-screen bg-sand-bg">
       <header className="fixed top-0 w-full z-50 bg-sand-bg h-20 border-b border-outline-variant">
@@ -115,7 +142,7 @@ export default function SettingsPage() {
             {saved && <span className="text-label-caps text-green-600">✓ Guardado</span>}
             <button
               onClick={handleSave}
-              disabled={saving}
+              disabled={saving || loadingProfile}
               className="px-6 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest disabled:opacity-30 hover:bg-on-primary-fixed-variant transition-colors"
             >
               {saving ? "Guardando..." : "Guardar"}
@@ -138,37 +165,51 @@ export default function SettingsPage() {
           <div className="mt-4 p-4 bg-error-container border border-error text-error text-body-md">{error}</div>
         )}
 
-        <div className="mt-6 space-y-10">
-          {QUESTIONS.map((q, idx) => (
-            <div key={q.id}>
-              <p className="text-label-caps text-on-surface-variant uppercase tracking-widest mb-1">Pregunta {idx + 1}</p>
-              <h3 className="text-body-lg font-medium mb-4">{q.question}</h3>
-              <div className="space-y-2">
-                {q.options.map(opt => (
-                  <button
-                    key={opt.value}
-                    onClick={() => setAnswer(q.id, opt.value)}
-                    className={`w-full text-left p-4 border transition-all ${
-                      answers[q.id] === opt.value
-                        ? "border-ink-black bg-surface-container text-ink-black"
-                        : "border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:border-ink-black"
-                    }`}
-                  >
-                    <span className="text-body-md">{opt.label}</span>
-                    {answers[q.id] === opt.value && (
-                      <span className="float-right material-symbols-outlined text-ink-black">check</span>
-                    )}
-                  </button>
+        {loadingProfile ? (
+          <div className="mt-6 space-y-10">
+            {Array.from({ length: 5 }).map((_, idx) => (
+              <div key={idx} className="animate-pulse">
+                <div className="h-4 bg-surface-container w-1/4 mb-4" />
+                <div className="h-6 bg-surface-container w-3/4 mb-4" />
+                {Array.from({ length: 5 }).map((_, oi) => (
+                  <div key={oi} className="h-14 bg-surface-container mb-2" />
                 ))}
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-6 space-y-10">
+            {QUESTIONS.map((q, idx) => (
+              <div key={q.id}>
+                <p className="text-label-caps text-on-surface-variant uppercase tracking-widest mb-1">Pregunta {idx + 1}</p>
+                <h3 className="text-body-lg font-medium mb-4">{q.question}</h3>
+                <div className="space-y-2">
+                  {q.options.map(opt => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setAnswer(q.id, opt.value)}
+                      className={`w-full text-left p-4 border transition-all ${
+                        answers[q.id] === opt.value
+                          ? "border-ink-black bg-surface-container text-ink-black"
+                          : "border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:border-ink-black"
+                      }`}
+                    >
+                      <span className="text-body-md">{opt.label}</span>
+                      {answers[q.id] === opt.value && (
+                        <span className="float-right material-symbols-outlined text-ink-black">check</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="mt-10 flex gap-4">
           <button
             onClick={handleSave}
-            disabled={saving}
+            disabled={saving || loadingProfile || !allAnswered}
             className="flex-1 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest disabled:opacity-30 hover:bg-on-primary-fixed-variant transition-colors"
           >
             {saving ? "Guardando..." : "Guardar Preferencias"}

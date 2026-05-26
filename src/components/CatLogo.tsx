@@ -8,28 +8,25 @@ export default function CatLogo({ size = 32, className = "" }: CatLogoProps) {
     <svg
       width={size}
       height={size}
-      viewBox="0 0 64 64"
-      fill="none"
+      viewBox="0 0 100 100"
       className={className}
       aria-label="Nekomoda cat"
     >
-      <polygon points="16,30 20,11 26,26" className="fill-ink-black/90" />
-      <polygon points="38,26 44,11 48,30" className="fill-ink-black/90" />
-      <polygon points="18,27 21,15 25,24" className="fill-primary-pink" />
-      <polygon points="39,24 43,15 46,27" className="fill-primary-pink" />
-      <ellipse cx="32" cy="36" rx="15" ry="13" className="fill-ink-black/90" />
-      <ellipse cx="24" cy="34" rx="3.5" ry="3.5" className="fill-sand-bg" />
-      <ellipse cx="40" cy="34" rx="3.5" ry="3.5" className="fill-sand-bg" />
-      <circle cx="25" cy="33" r="2" className="fill-ink-black" />
-      <circle cx="39" cy="33" r="2" className="fill-ink-black" />
-      <circle cx="26.5" cy="32" r="0.8" className="fill-white" />
-      <circle cx="40.5" cy="32" r="0.8" className="fill-white" />
-      <ellipse cx="32" cy="39.5" rx="2.5" ry="1.5" className="fill-primary-pink" />
-      <path d="M29 41.5 Q32 44.5 35 41.5" className="stroke-ink-black" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-      <line x1="17" y1="37" x2="7" y2="35" className="stroke-ink-black/60" strokeWidth="1.2" strokeLinecap="round" />
-      <line x1="17" y1="39" x2="7" y2="39.5" className="stroke-ink-black/60" strokeWidth="1.2" strokeLinecap="round" />
-      <line x1="47" y1="37" x2="57" y2="35" className="stroke-ink-black/60" strokeWidth="1.2" strokeLinecap="round" />
-      <line x1="47" y1="39" x2="57" y2="39.5" className="stroke-ink-black/60" strokeWidth="1.2" strokeLinecap="round" />
+      <polygon points="10,40 35,10 45,35" className="fill-ink-black" />
+      <polygon points="90,40 65,10 55,35" className="fill-ink-black" />
+      <circle cx="50" cy="55" r="35" className="fill-white stroke-ink-black stroke-[1.5]" />
+      <polygon points="50,70 35,35 65,35" className="fill-white" />
+      <circle cx="50" cy="35" r="8" className="fill-ink-black" />
+      <ellipse cx="37" cy="48" rx="7" ry="8" className="fill-ink-black" />
+      <ellipse cx="63" cy="48" rx="7" ry="8" className="fill-ink-black" />
+      <circle cx="35" cy="46" r="2.5" className="fill-white" />
+      <circle cx="61" cy="46" r="2.5" className="fill-white" />
+      <polygon points="47,60 53,60 50,65" className="fill-ink-black" />
+      <path d="M 50 65 Q 45 70 40 68 M 50 65 Q 55 70 60 68" className="stroke-ink-black stroke-[1.5] fill-none stroke-round" />
+      <line x1="30" y1="62" x2="15" y2="58" className="stroke-ink-black stroke-[1.5]" />
+      <line x1="30" y1="65" x2="15" y2="65" className="stroke-ink-black stroke-[1.5]" />
+      <line x1="70" y1="62" x2="85" y2="58" className="stroke-ink-black stroke-[1.5]" />
+      <line x1="70" y1="65" x2="85" y2="65" className="stroke-ink-black stroke-[1.5]" />
     </svg>
   );
 }

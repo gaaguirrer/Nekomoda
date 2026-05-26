@@ -42,6 +42,9 @@ export default function Navbar({ activeTab, onTabChange, showTabs }: NavbarProps
             <Link href="/feed" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-secondary transition-colors pb-1">
               Social
             </Link>
+            <Link href="/favorites" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-secondary transition-colors pb-1">
+              Favoritos
+            </Link>
             <Link href="/settings" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-secondary transition-colors pb-1">
               Ajustes
             </Link>

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { apiGet, apiPost } from "@/infrastructure/web/lib/apiClient";
+import { getUserId } from "@/infrastructure/demo/demoMode";
 
 interface AvailableItem {
   id: string;
@@ -19,15 +21,19 @@ export default function NewOutfitPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/recommendations?userId=seed&type=items")
+    apiGet("/api/products")
       .then(r => r.json())
-      .then(data => setAvailable(data.map((d: { id: string; name: string; image?: string; price?: number; metadata?: Record<string, unknown> }) => ({
-        id: d.id,
-        name: d.name,
-        images: d.image ? [d.image] : [],
-        price: d.price ?? 0,
-        category: "ropa",
-      }))))
+      .then(data => {
+        if (data.items) {
+          setAvailable(data.items.map((i: { id: string; name: string; images: string[]; price: number; category: string }) => ({
+            id: i.id,
+            name: i.name,
+            images: i.images ?? [],
+            price: i.price ?? 0,
+            category: i.category,
+          })));
+        }
+      })
       .catch(() => {});
   }, []);
 
@@ -43,30 +49,25 @@ export default function NewOutfitPage() {
     if (!name || selected.length === 0) return;
     setSaving(true);
 
-    const userId = localStorage.getItem("moda_user_id") || "anonymous";
+    const userId = getUserId();
 
     try {
-      const res = await fetch("/api/outfits", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          name,
-          description,
-          privacy,
-          items: selected.map(i => ({
-            itemId: i.id,
-            name: i.name,
-            image: i.images[0] ?? "",
-            category: i.category,
-          })),
-        }),
+      const res = await apiPost("/api/outfits", {
+        userId,
+        name,
+        description,
+        privacy,
+        items: selected.map(i => ({
+          itemId: i.id,
+          name: i.name,
+          image: i.images[0] ?? "",
+          category: i.category,
+        })),
       });
       if (res.ok) {
         router.push("/profile");
       }
     } catch {
-      // silent
     } finally {
       setSaving(false);
     }
@@ -135,7 +136,7 @@ export default function NewOutfitPage() {
                 <button
                   key={item.id}
                   onClick={() => toggleItem(item)}
-                  className={`group text-left transition-all ${
+                  className={`group text-left transition-all relative ${
                     isSelected ? "ring-2 ring-ink-black" : "hover:ring-1 hover:ring-outline-variant"
                   }`}
                 >

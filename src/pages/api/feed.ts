@@ -1,10 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { FirestoreOutfitRepository } from "@/infrastructure/firebase/FirestoreOutfitRepository";
-import { FirestoreFollowRepository } from "@/infrastructure/firebase/FirestoreFollowRepository";
+import { isDemoRequest, getDemoRepos, ensureDemoUser } from "@/infrastructure/demo/demoMiddleware";
 import { GetFeed } from "@/application/use-cases/GetFeed";
-
-const outfitRepo = new FirestoreOutfitRepository();
-const followRepo = new FirestoreFollowRepository();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") return res.status(405).json({ error: "Method not allowed" });
@@ -15,31 +11,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: "userId is required" });
     }
 
-    try {
+    if (isDemoRequest(req)) {
+      ensureDemoUser(req);
+      const { outfitRepo, followRepo } = getDemoRepos(req);
       const useCase = new GetFeed(outfitRepo, followRepo);
       const feed = await useCase.execute(userId, (type as "following" | "discover") ?? "discover");
-      if (feed.length === 0) {
-        throw new Error("Empty feed, trigger seed fallback");
-      }
       return res.status(200).json(feed);
-    } catch (dbError) {
-      console.warn("Firestore feed failed or empty, falling back to seed data:", dbError);
+    }
+
+    try {
+      const { FirestoreOutfitRepository } = await import("@/infrastructure/firebase/FirestoreOutfitRepository");
+      const { FirestoreFollowRepository } = await import("@/infrastructure/firebase/FirestoreFollowRepository");
+      const outfitRepo = new FirestoreOutfitRepository();
+      const followRepo = new FirestoreFollowRepository();
+      const useCase = new GetFeed(outfitRepo, followRepo);
+      const feed = await useCase.execute(userId, (type as "following" | "discover") ?? "discover");
+      if (feed.length === 0) throw new Error("Empty feed");
+      return res.status(200).json(feed);
+    } catch {
       const { seedOutfits } = await import("@/infrastructure/firebase/seedSocialData");
-      const feedItems = seedOutfits.filter(o => o.privacy === "public").map(o => ({
-        id: o.id,
-        name: o.name,
-        description: o.description ?? "",
+      const fallback = seedOutfits.filter(o => o.privacy === "public").map(o => ({
+        id: o.id, name: o.name, description: o.description ?? "",
         image: o.items[0]?.image ?? "",
-        metadata: {
-          userId: o.userId,
-          userDisplayName: o.userDisplayName,
-          userPhotoURL: undefined,
-          likes: o.likes,
-          items: o.items.map(item => ({ itemId: item.itemId, name: item.name, image: item.image })),
-          createdAt: o.createdAt ?? new Date().toISOString()
-        }
+        metadata: { userId: o.userId, userDisplayName: o.userDisplayName, likes: o.likes, items: o.items, createdAt: o.createdAt },
       }));
-      return res.status(200).json(feedItems);
+      return res.status(200).json(fallback);
     }
   } catch (error: unknown) {
     return res.status(500).json({ error: (error as Error).message ?? "Internal server error" });

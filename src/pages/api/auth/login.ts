@@ -1,8 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { FirebaseAuthService } from "@/infrastructure/firebase/FirebaseAuthService";
+import { isDemoRequest } from "@/infrastructure/demo/demoMiddleware";
+import { DEMO_USER } from "@/infrastructure/demo/demoMode";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+
+  if (isDemoRequest(req)) {
+    return res.status(200).json({ user: DEMO_USER });
+  }
 
   try {
     const { email, password } = req.body;
@@ -10,6 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: "email and password are required" });
     }
 
+    const { FirebaseAuthService } = await import("@/infrastructure/firebase/FirebaseAuthService");
     const authService = new FirebaseAuthService();
     const authUser = await authService.login(email, password);
 

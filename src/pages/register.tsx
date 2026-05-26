@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import CatLogo from "@/components/CatLogo";
 import { getFirebaseAuth } from "@/infrastructure/firebase/firebaseClient";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
@@ -70,7 +71,10 @@ export default function RegisterPage() {
         </Link>
 
         <div className="text-center mb-8">
-          <Link href="/" className="text-[48px] font-semibold tracking-tight text-ink-black">MODA</Link>
+          <Link href="/" className="flex items-center justify-center gap-2">
+            <CatLogo size={40} />
+            <span className="text-[48px] font-semibold tracking-tight text-ink-black">NEKOMODA</span>
+          </Link>
           <p className="text-body-lg text-on-surface-variant mt-4">Crea tu cuenta</p>
         </div>
 

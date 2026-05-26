@@ -382,7 +382,7 @@ export const seedPromotions: Promotion[] = [
     title: "Acne Studios",
     description: "Acceso anticipado a la colección cápsula 'Sand & Ink'.",
     discount: 30,
-    code: "MODA30",
+    code: "NEKO30",
     targetVector: [0.5, 0.25, 0.25, 0.5, 0.75],
   },
   {

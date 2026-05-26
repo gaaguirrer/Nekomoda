@@ -94,7 +94,7 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen bg-sand-bg flex flex-col items-center justify-center px-5 text-center">
         <span className="material-symbols-outlined text-6xl text-on-surface-variant mb-6">person_outline</span>
-        <h1 className="text-display-lg-mobile md:text-display-lg mb-4">Bienvenido a MODA</h1>
+        <h1 className="text-display-lg-mobile md:text-display-lg mb-4">Bienvenido a NEKOMODA</h1>
         <p className="text-body-lg text-on-surface-variant max-w-md mb-8">
           Cuéntanos sobre tu estilo para obtener recomendaciones personalizadas.
         </p>

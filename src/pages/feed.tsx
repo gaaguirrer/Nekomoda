@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import CatLogo from "@/components/CatLogo";
 import { getOrCreateUserId } from "@/infrastructure/web/lib/userId";
 
 type FeedTab = "discover" | "following";
@@ -48,8 +49,10 @@ export default function FeedPage() {
     <div className="min-h-screen bg-sand-bg">
       <div className="fixed top-0 w-full z-50 bg-sand-bg h-20">
         <div className="flex justify-between items-center w-full px-5 md:px-6 max-w-[1280px] mx-auto h-full">
-          <button onClick={() => router.push("/dashboard")} className="text-[36px] md:text-[48px] font-semibold tracking-tight text-ink-black">
-            MODA
+          <button onClick={() => router.push("/dashboard")} className="flex items-center gap-2">
+            <CatLogo size={32} className="md:hidden" />
+            <CatLogo size={40} className="hidden md:block" />
+            <span className="text-[36px] md:text-[48px] font-semibold tracking-tight text-ink-black">NEKOMODA</span>
           </button>
           <div className="flex items-center gap-4">
             <button onClick={() => router.push("/outfit/new")} className="px-4 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-colors">

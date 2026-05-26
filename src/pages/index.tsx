@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ItemCard from "@/components/ItemCard";
 import CatLogo from "@/components/CatLogo";
 import { seedItems, categoryLabels } from "@/infrastructure/firebase/seedData";
 import { seedCollections } from "@/infrastructure/firebase/seedSocialData";
+import { enterDemoMode } from "@/infrastructure/demo/demoMode";
 
 interface Product {
   id: string; name: string; price: number; image: string; matchScore: number; category: string;
@@ -12,7 +13,10 @@ interface Product {
 
 export default function LandingPage() {
   const router = useRouter();
-  const [user, setUser] = useState<{ displayName?: string } | null>(null);
+
+  useEffect(() => {
+    enterDemoMode();
+  }, []);
 
   const products: Product[] = seedItems.slice(0, 8).map(i => ({
     id: i.id, name: i.name, price: i.price,
@@ -27,13 +31,6 @@ export default function LandingPage() {
     likes: c.likes,
   }));
 
-  useEffect(() => {
-    const stored = localStorage.getItem("moda_user");
-    if (stored) setUser(JSON.parse(stored));
-  }, []);
-
-  const isLoggedIn = !!user;
-
   return (
     <div className="min-h-screen bg-sand-bg">
       <header className="fixed top-0 w-full z-50 bg-sand-bg/95 backdrop-blur-sm h-20 border-b border-outline-variant/50">
@@ -46,29 +43,16 @@ export default function LandingPage() {
           <nav className="hidden md:flex items-center gap-8">
             <Link href="/#productos" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Productos</Link>
             <Link href="/#colecciones" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Colecciones</Link>
-            {isLoggedIn ? (
-              <>
-                <Link href="/dashboard" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Dashboard</Link>
-                <Link href="/settings" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Ajustes</Link>
-                <button onClick={() => router.push("/profile")} className="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
-                  <span className="material-symbols-outlined text-ink-black text-2xl">person</span>
-                </button>
-              </>
-            ) : (
-              <>
-                <Link href="/login" className="px-5 py-2 border border-ink-black text-ink-black text-label-caps uppercase tracking-widest hover:bg-ink-black hover:text-white transition-colors">Entrar</Link>
-                <Link href="/register" className="px-5 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-colors">Registro</Link>
-              </>
-            )}
+            <Link href="/dashboard" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Dashboard</Link>
+            <Link href="/settings" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-ink-black transition-colors">Ajustes</Link>
+            <button onClick={() => router.push("/profile")} className="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+              <span className="material-symbols-outlined text-ink-black text-2xl">person</span>
+            </button>
           </nav>
           <div className="md:hidden flex items-center gap-3">
-            {isLoggedIn ? (
-              <button onClick={() => router.push("/dashboard")} className="w-8 h-8 rounded-full bg-surface-container overflow-hidden flex items-center justify-center">
-                <span className="material-symbols-outlined text-ink-black">person</span>
-              </button>
-            ) : (
-              <Link href="/login" className="px-4 py-2 bg-ink-black text-white text-label-caps uppercase tracking-widest text-xs">Entrar</Link>
-            )}
+            <button onClick={() => router.push("/dashboard")} className="w-8 h-8 rounded-full bg-surface-container overflow-hidden flex items-center justify-center">
+              <span className="material-symbols-outlined text-ink-black">person</span>
+            </button>
           </div>
         </div>
       </header>
@@ -85,15 +69,9 @@ export default function LandingPage() {
                 Respondes 5 preguntas sobre tus gustos y nuestro algoritmo encuentra las prendas, eventos y promociones perfectas para ti.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                {isLoggedIn ? (
-                  <Link href="/dashboard" className="px-8 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest text-center hover:bg-on-primary-fixed-variant transition-colors">
-                    Ir al Dashboard
-                  </Link>
-                ) : (
-                  <Link href="/register" className="px-8 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest text-center hover:bg-on-primary-fixed-variant transition-colors">
-                    Comenzar Ahora
-                  </Link>
-                )}
+                <Link href="/dashboard" className="px-8 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest text-center hover:bg-on-primary-fixed-variant transition-colors">
+                  Ir al Dashboard
+                </Link>
                 <Link href="/#productos" className="px-8 py-4 border border-outline-variant text-ink-black text-label-caps uppercase tracking-widest text-center hover:border-ink-black transition-colors">
                   Explorar Productos
                 </Link>
@@ -120,11 +98,9 @@ export default function LandingPage() {
               <span className="text-label-caps uppercase tracking-widest text-on-surface-variant mb-2 block">Catálogo</span>
               <h2 className="text-headline-md md:text-display-lg-mobile">Productos Destacados</h2>
             </div>
-            {isLoggedIn && (
-              <Link href="/dashboard" className="text-label-caps uppercase tracking-widest text-ink-black border-b border-ink-black pb-0.5">
-                Ver todos →
-              </Link>
-            )}
+            <Link href="/dashboard" className="text-label-caps uppercase tracking-widest text-ink-black border-b border-ink-black pb-0.5">
+              Ver todos →
+            </Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
             {products.map((p, i) => (
@@ -172,17 +148,11 @@ export default function LandingPage() {
         <section className="py-16 md:py-24 px-5 md:px-6 max-w-[1280px] mx-auto text-center">
           <h2 className="text-display-lg-mobile md:text-display-lg mb-4">¿Listo para transformar tu estilo?</h2>
           <p className="text-body-lg text-on-surface-variant max-w-lg mx-auto mb-8">
-            {isLoggedIn ? "Completa tu perfil de estilo y recibe recomendaciones hechas a tu medida." : "Regístrate gratis, responde 5 preguntas y descubre un mundo de moda personalizada."}
+            Completa tu perfil de estilo y recibe recomendaciones hechas a tu medida.
           </p>
-          {isLoggedIn ? (
-            <Link href="/onboarding" className="inline-block px-8 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-colors">
-              {user?.displayName ? `Hola ${user.displayName}, tu estilo →` : "Mi Perfil de Estilo →"}
-            </Link>
-          ) : (
-            <Link href="/register" className="inline-block px-8 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-colors">
-              Crear Cuenta Gratis
-            </Link>
-          )}
+          <Link href="/onboarding" className="inline-block px-8 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest hover:bg-on-primary-fixed-variant transition-colors">
+            Mi Perfil de Estilo →
+          </Link>
         </section>
       </main>
 

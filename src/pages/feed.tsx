@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import CatLogo from "@/components/CatLogo";
-import { getOrCreateUserId } from "@/infrastructure/web/lib/userId";
+import { getUserId } from "@/infrastructure/demo/demoMode";
+import { apiGet } from "@/infrastructure/web/lib/apiClient";
 
 type FeedTab = "discover" | "following";
 
@@ -29,15 +30,14 @@ export default function FeedPage() {
   useEffect(() => {
     const fetchFeed = async () => {
       setLoading(true);
-      const userId = getOrCreateUserId();
+      const userId = getUserId();
       try {
-        const res = await fetch(`/api/feed?userId=${userId}&type=${tab}`);
+        const res = await apiGet("/api/feed", { userId, type: tab });
         if (res.ok) {
           const data = await res.json();
           setItems(data);
         }
       } catch {
-        // silent
       } finally {
         setLoading(false);
       }

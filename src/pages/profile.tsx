@@ -1,40 +1,19 @@
-import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import CatLogo from "@/components/CatLogo";
+import { DEMO_USER } from "@/infrastructure/demo/demoMode";
 
 export default function ProfilePage() {
   const router = useRouter();
 
-  useEffect(() => {
-    const stored = localStorage.getItem("moda_user");
-    if (!stored) {
-      router.replace("/login");
-    }
-  }, [router]);
-
-  const userStr = typeof window !== "undefined" ? localStorage.getItem("moda_user") : null;
-  const user = userStr ? JSON.parse(userStr) : null;
-
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-sand-bg flex flex-col items-center justify-center px-5 text-center">
-        <span className="material-symbols-outlined text-5xl text-on-surface-variant mb-4">person</span>
-        <h1 className="text-headline-md mb-4">Inicia sesión para ver tu perfil</h1>
-        <Link href="/login" className="px-8 py-4 bg-ink-black text-white text-label-caps uppercase tracking-widest">
-          Iniciar Sesión
-        </Link>
-      </div>
-    );
-  }
-
-  return <ProfileContent user={user} />;
+  return <ProfileContent user={DEMO_USER} />;
 }
 
 function ProfileContent({ user }: { user: { uid: string; email?: string; displayName?: string; photoURL?: string } }) {
   const router = useRouter();
 
   const handleLogout = () => {
+    localStorage.removeItem("nekomoda_demo");
     localStorage.removeItem("moda_user_id");
     localStorage.removeItem("moda_user");
     router.push("/");

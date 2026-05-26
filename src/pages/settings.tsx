@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { apiPost } from "@/infrastructure/web/lib/apiClient";
+import { getUserId } from "@/infrastructure/demo/demoMode";
 
 const QUESTIONS = [
   {
@@ -67,14 +69,6 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const stored = localStorage.getItem("moda_user");
-    if (!stored) {
-      router.replace("/login");
-      return;
-    }
-  }, [router]);
-
   const setAnswer = (qId: string, value: string) => {
     setAnswers(prev => ({ ...prev, [qId]: value }));
     setSaved(false);
@@ -90,15 +84,11 @@ export default function SettingsPage() {
 
     setSaving(true);
     setError("");
-    const userId = localStorage.getItem("moda_user_id") || "anonymous";
+    const userId = getUserId();
     const mappedAnswers = qIds.map(id => answers[id]);
 
     try {
-      const res = await fetch("/api/onboarding", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, answers: mappedAnswers }),
-      });
+      const res = await apiPost("/api/onboarding", { userId, answers: mappedAnswers });
       if (res.ok) {
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);

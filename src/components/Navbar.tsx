@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface NavbarProps {
   activeTab?: "ropa" | "eventos" | "promociones";
@@ -7,6 +8,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ activeTab, onTabChange, showTabs }: NavbarProps) {
+  const router = useRouter();
   const tabs = [
     { key: "ropa" as const, label: "Ropa" },
     { key: "eventos" as const, label: "Eventos" },
@@ -34,10 +36,17 @@ export default function Navbar({ activeTab, onTabChange, showTabs }: NavbarProps
                 {tab.label}
               </button>
             ))}
+            <Link href="/feed" className="text-label-caps uppercase tracking-[0.1em] text-on-surface-variant hover:text-secondary transition-colors pb-1">
+              Social
+            </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <span className="material-symbols-outlined text-ink-black dark:text-surface-bright text-2xl">search</span>
-            <span className="material-symbols-outlined text-ink-black dark:text-surface-bright text-2xl">person</span>
+            <button onClick={() => router.push("/feed")} className="material-symbols-outlined text-ink-black dark:text-surface-bright text-2xl">
+              rss_feed
+            </button>
+            <button onClick={() => router.push("/profile")} className="material-symbols-outlined text-ink-black dark:text-surface-bright text-2xl">
+              person
+            </button>
           </div>
         </div>
       </header>
@@ -63,19 +72,19 @@ export default function Navbar({ activeTab, onTabChange, showTabs }: NavbarProps
       )}
 
       <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 bg-surface-container-lowest dark:bg-ink-black md:hidden rounded-t-xl shadow-sm">
-        <button className="flex flex-col items-center text-ink-black dark:text-coral-vibrant font-bold transition-transform active:scale-95">
+        <button onClick={() => router.push("/feed")} className="flex flex-col items-center text-ink-black dark:text-coral-vibrant font-bold transition-transform active:scale-95">
           <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>grid_view</span>
           <span className="text-[10px] mt-1 uppercase tracking-[0.1em] font-semibold">Feed</span>
         </button>
-        <button className="flex flex-col items-center text-on-surface-variant dark:text-on-primary-fixed-variant transition-transform active:scale-95">
-          <span className="material-symbols-outlined text-2xl">search</span>
-          <span className="text-[10px] mt-1 uppercase tracking-[0.1em] font-semibold">Explorar</span>
+        <button onClick={() => router.push("/dashboard")} className="flex flex-col items-center text-on-surface-variant dark:text-on-primary-fixed-variant transition-transform active:scale-95">
+          <span className="material-symbols-outlined text-2xl">explore</span>
+          <span className="text-[10px] mt-1 uppercase tracking-[0.1em] font-semibold">Tienda</span>
         </button>
-        <button className="flex flex-col items-center text-on-surface-variant dark:text-on-primary-fixed-variant transition-transform active:scale-95">
-          <span className="material-symbols-outlined text-2xl">favorite</span>
-          <span className="text-[10px] mt-1 uppercase tracking-[0.1em] font-semibold">Guardados</span>
+        <button onClick={() => router.push("/outfit/new")} className="flex flex-col items-center text-on-surface-variant dark:text-on-primary-fixed-variant transition-transform active:scale-95">
+          <span className="material-symbols-outlined text-2xl">add_circle</span>
+          <span className="text-[10px] mt-1 uppercase tracking-[0.1em] font-semibold">Outfit</span>
         </button>
-        <button className="flex flex-col items-center text-on-surface-variant dark:text-on-primary-fixed-variant transition-transform active:scale-95">
+        <button onClick={() => router.push("/profile")} className="flex flex-col items-center text-on-surface-variant dark:text-on-primary-fixed-variant transition-transform active:scale-95">
           <span className="material-symbols-outlined text-2xl">person</span>
           <span className="text-[10px] mt-1 uppercase tracking-[0.1em] font-semibold">Perfil</span>
         </button>

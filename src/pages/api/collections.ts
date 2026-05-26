@@ -11,17 +11,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     switch (req.method) {
       case "GET": {
         const { userId, id } = req.query;
-        if (id) {
-          const col = await collRepo.getById(id as string);
-          if (!col) return res.status(404).json({ error: "Collection not found" });
-          return res.status(200).json(col);
-        }
-        if (userId) {
-          const cols = await collRepo.getByUserId(userId as string);
+        try {
+          if (id) {
+            const col = await collRepo.getById(id as string);
+            if (!col) return res.status(404).json({ error: "Collection not found" });
+            return res.status(200).json(col);
+          }
+          if (userId) {
+            const cols = await collRepo.getByUserId(userId as string);
+            return res.status(200).json(cols);
+          }
+          const cols = await collRepo.getPublic();
+          if (cols.length === 0) {
+            const { seedCollections } = await import("@/infrastructure/firebase/seedSocialData");
+            return res.status(200).json(seedCollections);
+          }
           return res.status(200).json(cols);
+        } catch (dbError) {
+          console.warn("Firestore collection GET failed, falling back to seed data:", dbError);
+          const { seedCollections } = await import("@/infrastructure/firebase/seedSocialData");
+          return res.status(200).json(seedCollections);
         }
-        const cols = await collRepo.getPublic();
-        return res.status(200).json(cols);
       }
 
       case "POST": {

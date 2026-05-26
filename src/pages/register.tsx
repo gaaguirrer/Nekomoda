@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import CatLogo from "@/components/CatLogo";
-import { getFirebaseAuth } from "@/infrastructure/firebase/firebaseClient";
+import { getFirebaseAuth, validateFirebaseConfig } from "@/infrastructure/firebase/firebaseClient";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 export default function RegisterPage() {
@@ -39,6 +39,11 @@ export default function RegisterPage() {
   const handleGoogleSignIn = async () => {
     setError("");
     try {
+      const configErr = validateFirebaseConfig();
+      if (configErr) {
+        setError("Error de configuración: " + configErr + ". Revisa tus variables de entorno.");
+        return;
+      }
       const auth = getFirebaseAuth();
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
